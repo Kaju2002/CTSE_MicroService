@@ -40,6 +40,19 @@ export declare class AuthService {
         accessToken: string;
     }>;
     validateUserById(userId: string): Promise<User | null>;
+    getProfile(user: User): Promise<{
+        id: string;
+        email: string;
+        firstName: string | null;
+        lastName: string | null;
+        phone: string | null;
+        address: string | null;
+        imageUrl: string | null;
+        role: import("@prisma/client").$Enums.Role;
+        isActive: boolean;
+        createdAt: Date;
+        updatedAt: Date;
+    }>;
     private issueToken;
     private sanitizeUser;
 }

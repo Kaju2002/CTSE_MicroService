@@ -18,6 +18,8 @@ const swagger_1 = require("@nestjs/swagger");
 const auth_service_1 = require("./auth.service");
 const login_dto_1 = require("./dto/login.dto");
 const register_dto_1 = require("./dto/register.dto");
+const jwt_auth_guard_1 = require("./guards/jwt-auth.guard");
+const current_user_decorator_1 = require("./decorators/current-user.decorator");
 let AuthController = class AuthController {
     authService;
     constructor(authService) {
@@ -28,6 +30,9 @@ let AuthController = class AuthController {
     }
     async login(dto) {
         return this.authService.login(dto);
+    }
+    async getProfile(user) {
+        return this.authService.getProfile(user);
     }
 };
 exports.AuthController = AuthController;
@@ -51,6 +56,18 @@ __decorate([
     __metadata("design:paramtypes", [login_dto_1.LoginDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
+__decorate([
+    (0, common_1.Get)("me"),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, swagger_1.ApiBearerAuth)('JWT-auth'),
+    (0, swagger_1.ApiOperation)({ summary: "Get current user" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Current user retrieved successfully" }),
+    (0, swagger_1.ApiResponse)({ status: 401, description: "Unauthorized" }),
+    __param(0, (0, current_user_decorator_1.CurrentUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "getProfile", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)("auth"),
     (0, swagger_1.ApiTags)("Auth"),
