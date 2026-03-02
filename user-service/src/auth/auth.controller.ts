@@ -69,4 +69,14 @@ export class AuthController {
     async resetPassword(@Body() dto: ResetPasswordDto) {
         return this.authService.resetPassword(dto)
     }
+
+    @Get("validate")
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth('JWT-auth')
+    @ApiOperation({summary: "Validate user and return current user"})
+    @ApiResponse({status: 200, description: "Current user returned successfully"})
+    @ApiResponse({status: 401, description: "Unauthorized"})
+    async validate(@CurrentUser() user: any) {
+        return this.authService.validateToken(user)
+    }
 }

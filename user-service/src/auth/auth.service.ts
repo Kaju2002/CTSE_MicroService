@@ -180,6 +180,11 @@ export class AuthService {
         return this.jwtService.sign(payload)
     }
 
+    // validate token
+    async validateToken(user: User) {
+        return { message: "Token validated successfully", user: sanitizeUser(user) }
+    }
+
     // remove password from user object
     // private sanitizeUser(user: User) {
     //     const { password, ...rest } = user
