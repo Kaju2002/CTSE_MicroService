@@ -2,11 +2,11 @@ import {
     Body,
     Get,
     UseGuards,
-    Request,
     Controller,
     Post,
     UsePipes,
     ValidationPipe,
+    Put,
   } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from "@nestjs/swagger";
 import { AuthService } from "./auth.service";
@@ -15,6 +15,9 @@ import { RegisterDto } from "./dto/register.dto";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 import type { User } from "@prisma/client";
 import { CurrentUser } from "./decorators/current-user.decorator";
+import { ChangePasswordDto } from "./dto/change-password.dto";
+import { ForgetPasswordDto } from "./dto/forgot-password.dto";
+import { ResetPasswordDto } from "./dto/reset-password.dto";
 
 
 @Controller("auth")
@@ -47,5 +50,31 @@ export class AuthController {
     @ApiResponse({status: 401, description: "Unauthorized"})
     async getProfile(@CurrentUser() user: User) {
         return this.authService.getProfile(user)
+    }
+
+    @Put("change-password")
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth('JWT-auth')
+    @ApiOperation({summary: "Change password of user"})
+    @ApiResponse({status: 200, description: "Password changed successfully"})
+    @ApiResponse({status: 401, description: "Unauthorized"})
+    async changePassword(@Body() dto: ChangePasswordDto, @CurrentUser("id") userId: string) {
+        return this.authService.changePassword(userId, dto)
+    }
+
+    @Post("forget-password")
+    @ApiOperation({summary: "Forget password of user"})
+    @ApiResponse({status: 200, description: "Password reset email sent successfully"})
+    @ApiResponse({status: 400, description: "User not found"})
+    async forgetPassword(@Body() dto: ForgetPasswordDto) {
+        return this.authService.forgetPassword(dto)
+    }
+
+    @Post("reset-password")
+    @ApiOperation({summary: "Reset password of user"})
+    @ApiResponse({status: 200, description: "Password reset successfully"})
+    @ApiResponse({status: 400, description: "Invalid OTP"})
+    async resetPassword(@Body() dto: ResetPasswordDto) {
+        return this.authService.resetPassword(dto)
     }
 }
