@@ -3,7 +3,13 @@ const Booking = require('../models/Booking');
 // Create a new booking
 exports.createBooking = async (req, res) => {
   try {
-    const booking = new Booking(req.body);
+    const now = new Date();
+    const bookingData = {
+      ...req.body,
+      booking_date: now,
+      booking_time: now.toTimeString().slice(0,5)
+    };
+    const booking = new Booking(bookingData);
     await booking.save();
     res.status(201).json(booking);
   } catch (err) {
@@ -50,7 +56,7 @@ exports.updateBooking = async (req, res) => {
 // Delete a booking by ID
 exports.deleteBooking = async (req, res) => {
   try {
-    const booking = await Booking.findOneAndDelete({ booking_id: req.params.id });
+    const booking = await Booking.findByIdAndDelete(req.params.id);
     if (!booking) return res.status(404).json({ error: 'Booking not found' });
     res.json({ message: 'Booking deleted' });
   } catch (err) {
