@@ -13,7 +13,7 @@ import { AuthService } from "./auth.service";
 import { LoginDto } from "./dto/login.dto";
 import { RegisterDto } from "./dto/register.dto";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
-import type { User } from "@prisma/client";
+// import type { User } from "@prisma/client";
 import { CurrentUser } from "./decorators/current-user.decorator";
 import { ChangePasswordDto } from "./dto/change-password.dto";
 import { ForgetPasswordDto } from "./dto/forgot-password.dto";
@@ -42,15 +42,7 @@ export class AuthController {
         return this.authService.login(dto)
     }
 
-    @Get("me")
-    @UseGuards(JwtAuthGuard)
-    @ApiBearerAuth('JWT-auth')
-    @ApiOperation({summary: "Get current user"})
-    @ApiResponse({status: 200, description: "Current user retrieved successfully"})
-    @ApiResponse({status: 401, description: "Unauthorized"})
-    async getProfile(@CurrentUser() user: User) {
-        return this.authService.getProfile(user)
-    }
+    
 
     @Put("change-password")
     @UseGuards(JwtAuthGuard)

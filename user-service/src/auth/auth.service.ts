@@ -9,6 +9,7 @@ import { ChangePasswordDto } from "./dto/change-password.dto"
 import { ForgetPasswordDto } from "./dto/forgot-password.dto"
 import { MailService } from "../mail/mail.service"
 import { ResetPasswordDto } from "./dto/reset-password.dto"
+import { sanitizeUser } from "src/users/user.utils"
 
 @Injectable()
 export class AuthService {
@@ -41,7 +42,7 @@ export class AuthService {
         })
         const token = this.issueToken(user)
         return {
-            user: this.sanitizeUser(user),
+            user: sanitizeUser(user),
             accessToken: token
         }
     }
@@ -64,7 +65,7 @@ export class AuthService {
         }
         const token = this.issueToken(user)
         return {
-            user: this.sanitizeUser(user),
+            user: sanitizeUser(user),
             accessToken: token
         }
     }
@@ -80,9 +81,7 @@ export class AuthService {
     }
 
     // get profile of user
-    async getProfile(user: User) {
-        return this.sanitizeUser(user)
-    }
+    
 
     // forget password of user
     async forgetPassword(dto: ForgetPasswordDto) {
@@ -182,8 +181,8 @@ export class AuthService {
     }
 
     // remove password from user object
-    private sanitizeUser(user: User) {
-        const { password, ...rest } = user
-        return rest
-    }
+    // private sanitizeUser(user: User) {
+    //     const { password, ...rest } = user
+    //     return rest
+    // }
 }
