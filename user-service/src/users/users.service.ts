@@ -3,10 +3,11 @@ import { Role, User } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 import { sanitizeUser } from "./user.utils";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import { CloudinaryService } from "src/cloudinary/cloudinary.service";
 
 @Injectable()
 export class UsersService {
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(private readonly prisma: PrismaService, private readonly cloudinaryService: CloudinaryService) { }
 
     async getAllUsers(page: number, limit: number) {
         const skip = (page - 1) * limit
@@ -78,6 +79,15 @@ export class UsersService {
             data: data
         })
         return { message: "User updated successfully", user: sanitizeUser(updatedUser) }
+    }
+
+    async updateAvatar(user: User, file: Express.Multer.File) {
+        const cloudinaryResponse = await this.cloudinaryService.uploadImage(file)
+        const updatedUser = await this.prisma.user.update({
+            where: { id: user.id },
+            data: { imageUrl: cloudinaryResponse.secure_url }
+        })
+        return { message: "Avatar updated successfully", user: sanitizeUser(updatedUser) }
     }
 
     // private sanitizeUser(user: User) {
