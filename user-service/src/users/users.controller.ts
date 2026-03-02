@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards, Put, Param, Patch, Body, Query, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Controller, Get, UseGuards, Put, Param, Patch, Body, Query, UploadedFile, UseInterceptors, Delete } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags, ApiQuery, ApiConsumes, ApiBody } from "@nestjs/swagger";
 import { UsersService } from "./users.service";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
@@ -90,4 +90,14 @@ export class UsersController {
     async updateAvatar(@UploadedFile() file: Express.Multer.File, @CurrentUser() user: any) {
         return this.usersService.updateAvatar(user, file)
     }
+
+    @Delete("me/avatar")
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth('JWT-auth')
+    @ApiOperation({ summary: "Delete current user's avatar" })
+    @ApiResponse({ status: 200, description: "Current user's avatar deleted successfully" })
+    @ApiResponse({ status: 401, description: "Unauthorized" })
+    async deleteAvatar(@CurrentUser() user: any) {
+        return this.usersService.deleteAvatar(user)
+    }   
 }

@@ -90,6 +90,14 @@ export class UsersService {
         return { message: "Avatar updated successfully", user: sanitizeUser(updatedUser) }
     }
 
+    async deleteAvatar(user: User) {
+        const updatedUser = await this.prisma.user.update({
+            where: { id: user.id },
+            data: { imageUrl: null }
+        })
+        return { message: "Avatar deleted successfully", user: sanitizeUser(updatedUser) }
+    }
+
     // private sanitizeUser(user: User) {
     //     const { password, ...rest } = user
     //     return rest
