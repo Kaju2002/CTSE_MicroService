@@ -27,7 +27,12 @@ app.get('/', (req, res) => {
 const bookingRoutes = require('./routes/bookingRoutes');
 app.use('/api/bookings', bookingRoutes);
 
+// Swagger setup
+const { swaggerUi, specs } = require('./swagger');
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+
 app.listen(PORT, () => {
 	console.log(`Booking Service running on port ${PORT}`);
+	console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
 });
 //my server file
