@@ -75,6 +75,11 @@ export class AuthService {
         return user ?? null
     }
 
+    // get profile of user
+    async getProfile(user:User){
+        return this.sanitizeUser(user)
+    }
+
     // issue token to user
     private issueToken(user: User): string {
         const payload = {

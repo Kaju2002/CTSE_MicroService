@@ -106,6 +106,9 @@ let AuthService = class AuthService {
         });
         return user ?? null;
     }
+    async getProfile(user) {
+        return this.sanitizeUser(user);
+    }
     issueToken(user) {
         const payload = {
             sub: user.id,
