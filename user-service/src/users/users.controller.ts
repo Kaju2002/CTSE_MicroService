@@ -1,5 +1,5 @@
-import { Controller, Get, UseGuards, Put, Param, Patch, Body, Query } from "@nestjs/common";
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags, ApiQuery } from "@nestjs/swagger";
+import { Controller, Get, UseGuards, Put, Param, Patch, Body, Query, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags, ApiQuery, ApiConsumes, ApiBody } from "@nestjs/swagger";
 import { UsersService } from "./users.service";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { Role } from "@prisma/client";
@@ -7,6 +7,7 @@ import { Roles } from "src/auth/decorators/roles.decorator";
 import { CurrentUser } from "src/auth/decorators/current-user.decorator";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { GetUsersQueryDto } from "./dto/get-users.dto";
+import { FileInterceptor } from "@nestjs/platform-express";
 
 @Controller("users")
 @ApiTags("Users")
@@ -68,5 +69,25 @@ export class UsersController {
     @ApiResponse({ status: 401, description: "Unauthorized" })
     async updateProfile(@Body() data: UpdateUserDto, @CurrentUser() user: any) {
         return this.usersService.updateProfile(user, data)
+    }
+
+    @Patch("me/avatar")
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth('JWT-auth')
+    @ApiConsumes('multipart/form-data')
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                avatar: { type: 'string', format: 'binary' }
+            }
+        }
+    })
+    @ApiOperation({ summary: "Update current user's avatar" })
+    @ApiResponse({ status: 200, description: "Current user's avatar updated successfully" })
+    @ApiResponse({ status: 401, description: "Unauthorized" })
+    @UseInterceptors(FileInterceptor('avatar'))
+    async updateAvatar(@UploadedFile() file: Express.Multer.File, @CurrentUser() user: any) {
+        return this.usersService.updateAvatar(user, file)
     }
 }
