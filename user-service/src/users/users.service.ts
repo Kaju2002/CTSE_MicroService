@@ -8,8 +8,16 @@ import { UpdateUserDto } from "./dto/update-user.dto";
 export class UsersService {
     constructor(private readonly prisma: PrismaService) { }
 
-    async getAllUsers() {
-        return this.prisma.user.findMany()
+    async getAllUsers(page: number, limit: number) {
+        const skip = (page - 1) * limit
+        const [items, total] = await this.prisma.$transaction([
+            this.prisma.user.findMany({
+                skip,
+                take: limit
+            }),
+            this.prisma.user.count()
+        ])
+        return { items: items.map(sanitizeUser), total, page, limit }
     }
 
     async deactivateUser(id: string) {
