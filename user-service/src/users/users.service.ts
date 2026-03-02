@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from "@nestjs/comm
 import { Role, User } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 import { sanitizeUser } from "./user.utils";
+import { UpdateUserDto } from "./dto/update-user.dto";
 
 @Injectable()
 export class UsersService {
@@ -54,6 +55,21 @@ export class UsersService {
 
     async getProfile(user: User) {
         return sanitizeUser(user)
+    }
+
+    async updateProfile(user: User, data: UpdateUserDto) {
+
+        const existingUser = await this.prisma.user.findUnique({
+            where: { id: user.id }
+        })
+        if (!existingUser) {
+            throw new NotFoundException("User not found")
+        }
+        const updatedUser = await this.prisma.user.update({
+            where: { id: user.id },
+            data: data
+        })
+        return { message: "User updated successfully", user: sanitizeUser(updatedUser) }
     }
 
     // private sanitizeUser(user: User) {
