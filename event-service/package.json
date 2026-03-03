@@ -2,7 +2,7 @@
   "name": "event-service",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -17,6 +17,10 @@
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "mongoose": "^9.2.3",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
     "nodemon": "^3.1.14"
   }
 }
