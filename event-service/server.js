@@ -3,6 +3,8 @@ import cors from "cors";
 import "dotenv/config";
 import connectDB from "./config/mongodb.js";
 import eventRouter from "./routes/event.route.js";
+import { swaggerUi, specs } from "./config/swagger.js";
+
 // import connectCloudinary from "./config/cloudinary.js";
 
 //app config
@@ -16,11 +18,13 @@ app.use(express.json());
 
 //api endpoints
 app.use("/event", eventRouter);
-
-
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 app.get("/", (req, res) => {
   res.send("Api working ");
 });
 
-app.listen(port, () => console.log("Server Started", port));
+app.listen(port, () => {
+  console.log("Server Started", port);
+  console.log(`Swagger docs available at http://localhost:${port}/api-docs`);
+});
