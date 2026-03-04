@@ -22,14 +22,5 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  booking-service:
-    build: ./booking-service
-    container_name: booking-service-ticket
-    ports:
-      - "3000:3000"
-    env_file:
-      - ./booking-service/.env
-    depends_on: []
-
 volumes:
   postgres_data:
