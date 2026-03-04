@@ -41,6 +41,28 @@ services:
     volumes:
       - mongo_review_data:/data/db
 
+  booking-service:
+    build: ./booking-service
+    container_name: booking-service-ticket
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./booking-service/.env
+    environment:
+      MONGODB_URI: mongodb://mongo-booking:27017/booking-service-db
+    depends_on:
+      - mongo-booking
+
+  mongo-booking:
+    image: mongo:7
+    container_name: mongo-booking
+    restart: always
+    ports:
+      - "27019:27017"
+    volumes:
+      - mongo_booking_data:/data/db
+
 volumes:
   postgres_data:
   mongo_review_data:
+  mongo_booking_data:
