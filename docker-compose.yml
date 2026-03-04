@@ -22,5 +22,25 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  review-service:
+    build: ./review-service
+    container_name: review-service
+    ports:
+      - "3002:3001"
+    environment:
+      MONGODB_URI: mongodb://mongo-review:27017/reviewdb
+    depends_on:
+      - mongo-review
+
+  mongo-review:
+    image: mongo:7
+    container_name: mongo-review
+    restart: always
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo_review_data:/data/db
+
 volumes:
   postgres_data:
+  mongo_review_data:
