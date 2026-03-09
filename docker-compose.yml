@@ -3,53 +3,34 @@ version: "3.8"
 services:
   user-service:
     build: ./user-service
+    image: user-service:latest
     container_name: user-service
     ports:
       - "4003:4003"
     env_file:
       - ./user-service/.env
-    environment:
-      DATABASE_URL: postgres://postgres:password@postgres-user:5432/userdb
-    depends_on:
-      - postgres-user
-
-  postgres-user:
-    image: postgres:15
-    container_name: postgres-user
-    restart: always
-    environment:
-      POSTGRES_DB: userdb
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-    ports:
-      - "5433:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
 
   review-service:
     build: ./review-service
+    image: review-service:latest
     container_name: review-service
     ports:
       - "4002:4002"
-    environment:
-      MONGODB_URI: mongodb://mongo-review:27017/reviewdb
-    depends_on:
-      - mongo-review
+    env_file:
+      - ./review-service/.env
 
   booking-service:
     build: ./booking-service
+    image: booking-service:latest
     container_name: booking-service
     ports:
       - "4001:4001"
     env_file:
       - ./booking-service/.env
-    environment:
-      MONGODB_URI: mongodb://mongo-booking:27017/booking-service-db
-    depends_on:
-      - mongo-booking
 
   event-service:
     build: ./event-service
+    image: event-service:latest
     container_name: event-service
     ports:
       - "4000:4000"
@@ -60,6 +41,7 @@ services:
 
   api-gateway:
     build: ./api-gateway
+    image: api-gateway:latest
     container_name: api-gateway
     ports:
       - "3000:3000"

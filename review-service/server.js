@@ -15,9 +15,9 @@ const PORT = process.env.PORT || 4002;
 app.use(cors());
 app.use(bodyParser.json());
 
-app.get("/", (req, res) => {
-  res.send("Review Service API is running");
-});
+// app.get("/", (req, res) => {
+//   res.send("Review Service API is running");
+// });
 
 const reviewRoutes = require("./routes/reviewRoutes");
 app.use("/reviews", reviewRoutes);
