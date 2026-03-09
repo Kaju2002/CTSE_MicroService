@@ -17,7 +17,7 @@ app.use(cors());
 app.use(express.json());
 
 //api endpoints
-app.use("/event", eventRouter);
+app.use("/events", eventRouter);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 app.get("/", (req, res) => {
