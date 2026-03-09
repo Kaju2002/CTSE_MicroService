@@ -205,7 +205,7 @@ eventRouter.get("/:id", getEventById);
  *             example:
  *               message: "Event not found"
  */
-eventRouter.put("/:id", updateEvent);
+eventRouter.put("/:id", validateAdmin, updateEvent);
 /**
  * @swagger
  * /event/{id}:
@@ -233,6 +233,6 @@ eventRouter.put("/:id", updateEvent);
  *             example:
  *               message: "Event not found"
  */
-eventRouter.delete("/:id", deleteEvent);
+eventRouter.delete("/:id", validateAdmin, deleteEvent);
 
 export default eventRouter;
