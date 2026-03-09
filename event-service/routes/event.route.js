@@ -6,6 +6,7 @@ import {
   getEvents,
   updateEvent,
 } from "../controller/event.controller.js";
+import { validateAdmin } from "../middleware/validateAdmin.js";
 
 const eventRouter = express.Router();
 /**
@@ -50,7 +51,7 @@ const eventRouter = express.Router();
  *             example:
  *               message: "Invalid event data"
  */
-eventRouter.post("/create", createEvent);
+eventRouter.post("/create", validateAdmin, createEvent);
 /**
  * @swagger
  * /event:
