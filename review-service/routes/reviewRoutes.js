@@ -1,20 +1,21 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const reviewController = require('../controllers/reviewController');
+const reviewController = require("../controllers/reviewController");
 
 // Create a new review
-router.post('/', reviewController.createReview);
+router.post("/", reviewController.createReview);
 
 // Get all reviews for a particular event
-router.get('/event/:eventId', reviewController.getAllReviewsByEvent);
+router.get("/event/:eventId", reviewController.getAllReviewsByEvent);
+router.get("/", reviewController.getAllReviews);
 
 // Get all reviews by a particular user
-router.get('/user/:userId', reviewController.getAllReviewsByUser);
+router.get("/user/:userId", reviewController.getAllReviewsByUser);
 
 // Update a review by review_id
-router.put('/:id', reviewController.updateReview);
+router.put("/:id", reviewController.updateReview);
 
 // Delete a review by review_id
-router.delete('/:id', reviewController.deleteReview);
+router.delete("/:id", reviewController.deleteReview);
 
 module.exports = router;

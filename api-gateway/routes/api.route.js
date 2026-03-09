@@ -12,6 +12,10 @@ router.use("/events", (req, res) =>
   proxyToService(req, res, process.env.EVENT_URL),
 );
 
+router.use("/auth", (req, res) =>
+  proxyToService(req, res, process.env.USER_URL),
+);
+
 router.use("/users", (req, res) =>
   proxyToService(req, res, process.env.USER_URL),
 );
