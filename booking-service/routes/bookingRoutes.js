@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bookingController = require('../controllers/bookingController');
+const  validateUserMiddleware  = require('../middleware/validateUserMiddleware');
 
 /**
  * @swagger
@@ -32,7 +33,7 @@ const bookingController = require('../controllers/bookingController');
  *       400:
  *         description: Bad request
  */
-router.post('/', bookingController.createBooking);
+router.post('/',validateUserMiddleware, bookingController.createBooking);
 
 /**
  * @swagger
