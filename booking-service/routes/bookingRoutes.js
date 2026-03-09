@@ -4,7 +4,7 @@ const bookingController = require('../controllers/bookingController');
 
 /**
  * @swagger
- * /api/bookings:
+ * /bookings:
  *   post:
  *     summary: Create a new booking
  *     requestBody:
@@ -36,7 +36,7 @@ router.post('/', bookingController.createBooking);
 
 /**
  * @swagger
- * /api/bookings:
+ * /bookings:
  *   get:
  *     summary: Get all bookings
  *     responses:
@@ -47,7 +47,7 @@ router.get('/', bookingController.getBookings);
 
 /**
  * @swagger
- * /api/bookings/{id}:
+ * /bookings/{id}:
  *   get:
  *     summary: Get a booking by ID
  *     parameters:
@@ -66,7 +66,7 @@ router.get('/:id', bookingController.getBookingById);
 
 /**
  * @swagger
- * /api/bookings/{id}:
+ * /bookings/{id}:
  *   put:
  *     summary: Update a booking by ID
  *     parameters:
@@ -91,7 +91,7 @@ router.put('/:id', bookingController.updateBooking);
 
 /**
  * @swagger
- * /api/bookings/{id}:
+ * /bookings/{id}:
  *   delete:
  *     summary: Delete a booking by ID
  *     parameters:
