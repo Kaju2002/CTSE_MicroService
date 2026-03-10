@@ -1,4 +1,18 @@
-import { Controller, Get, UseGuards, Put, Param, Patch, Body, Query, UploadedFile, UseInterceptors, Delete } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  UseGuards,
+  Put,
+  Param,
+  Patch,
+  Body,
+  Query,
+  UploadedFile,
+  UseInterceptors,
+  Delete,
+  UsePipes,
+  ValidationPipe,
+} from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags, ApiQuery, ApiConsumes, ApiBody } from "@nestjs/swagger";
 import { UsersService } from "./users.service";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
@@ -11,6 +25,7 @@ import { FileInterceptor } from "@nestjs/platform-express";
 
 @Controller("users")
 @ApiTags("Users")
+@UsePipes(new ValidationPipe({ transform: true }))
 export class UsersController {
     constructor(private readonly usersService: UsersService) { }
 
