@@ -25,6 +25,11 @@ type EventDetail = {
   start?: string;
   end?: string;
   isSeated?: boolean;
+  seats?: {
+    seatNumber: string;
+    price: number;
+    bookingStatus: "available" | "reserved" | "sold";
+  }[];
 };
 
 export default function EditBookingPage() {
@@ -89,6 +94,16 @@ export default function EditBookingPage() {
     void load();
   }, [id]);
 
+  useEffect(() => {
+    if (!eventDetail?.isSeated || !seatNumber) return;
+    const selectedSeat = (eventDetail.seats || []).find(
+      (seat) => seat.seatNumber === seatNumber,
+    );
+    if (selectedSeat) {
+      setTicketPrice(selectedSeat.price);
+    }
+  }, [eventDetail, seatNumber]);
+
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!id || saving) return;
@@ -113,6 +128,7 @@ export default function EditBookingPage() {
           customer_name: customerName,
           email,
           phone_number: phoneNumber,
+          seat_number: eventDetail?.isSeated ? seatNumber : undefined,
           ticket_price: ticketPrice,
         }),
       });
@@ -195,6 +211,37 @@ export default function EditBookingPage() {
             )}
           </div>
         </div>
+
+        {eventDetail?.isSeated && (
+          <div className="md:col-span-2">
+            <label className="mb-2 block text-xs text-gray-500">Seat</label>
+            <div className="grid grid-cols-5 gap-2 rounded-lg border border-gray-200 p-3 dark:border-gray-700">
+              {(eventDetail.seats || [])
+                .filter(
+                  (seat) =>
+                    seat.bookingStatus === "available" ||
+                    seat.seatNumber === seatNumber,
+                )
+                .map((seat) => (
+                  <button
+                    key={seat.seatNumber}
+                    type="button"
+                    onClick={() => setSeatNumber(seat.seatNumber)}
+                    className={`rounded-md border px-2 py-2 text-xs ${
+                      seatNumber === seat.seatNumber
+                        ? "border-brand-500 bg-brand-50 text-brand-700 dark:bg-brand-900/20 dark:text-brand-300"
+                        : "border-gray-300 text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+                    }`}
+                  >
+                    💺 {seat.seatNumber}
+                    <div className="mt-1 text-[10px] opacity-80">
+                      LKR {seat.price}
+                    </div>
+                  </button>
+                ))}
+            </div>
+          </div>
+        )}
 
         <div>
           <label className="mb-1 block text-xs text-gray-500">
