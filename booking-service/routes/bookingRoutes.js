@@ -33,7 +33,7 @@ const  validateUserMiddleware  = require('../middleware/validateUserMiddleware')
  *       400:
  *         description: Bad request
  */
-router.post('/', bookingController.createBooking);
+router.post('/', validateUserMiddleware, bookingController.createBooking);
 
 /**
  * @swagger

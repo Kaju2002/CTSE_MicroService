@@ -50,6 +50,14 @@ const navItems: NavItem[] = [
       { name: "View Events", path: "/event-management/view-events" },
     ],
   },
+  {
+    icon: <ListIcon />,
+    name: "Booking Management",
+    subItems: [
+      { name: "Book an Event", path: "/booking-management/book-event" },
+      { name: "View Bookings", path: "/booking-management/view-bookings" },
+    ],
+  },
 ];
 
 const othersItems: NavItem[] = [];
