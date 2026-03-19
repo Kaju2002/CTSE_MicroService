@@ -33,7 +33,7 @@ const  validateUserMiddleware  = require('../middleware/validateUserMiddleware')
  *       400:
  *         description: Bad request
  */
-router.post('/',validateUserMiddleware, bookingController.createBooking);
+router.post('/', bookingController.createBooking);
 
 /**
  * @swagger
@@ -44,7 +44,7 @@ router.post('/',validateUserMiddleware, bookingController.createBooking);
  *       200:
  *         description: List of bookings
  */
-router.get('/', bookingController.getBookings);
+router.get('/',validateUserMiddleware, bookingController.getBookings);
 
 /**
  * @swagger
@@ -63,7 +63,7 @@ router.get('/', bookingController.getBookings);
  *       404:
  *         description: Booking not found
  */
-router.get('/:id', bookingController.getBookingById);
+router.get('/:id',validateUserMiddleware, bookingController.getBookingById);
 
 /**
  * @swagger
@@ -88,7 +88,7 @@ router.get('/:id', bookingController.getBookingById);
  *       404:
  *         description: Booking not found
  */
-router.put('/:id', bookingController.updateBooking);
+router.put('/:id',validateUserMiddleware, bookingController.updateBooking);
 
 /**
  * @swagger
@@ -107,6 +107,6 @@ router.put('/:id', bookingController.updateBooking);
  *       404:
  *         description: Booking not found
  */
-router.delete('/:id', bookingController.deleteBooking);
+router.delete('/:id',validateUserMiddleware, bookingController.deleteBooking);
 
 module.exports = router;
