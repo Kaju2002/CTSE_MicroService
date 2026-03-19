@@ -238,7 +238,7 @@ export default function BookEventPage() {
                           : "border-gray-300 text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
                       }`}
                     >
-                      {seat.seatNumber}
+                      💺 {seat.seatNumber}
                       <div className="mt-1 text-[10px] opacity-80">
                         LKR {seat.price}
                       </div>
