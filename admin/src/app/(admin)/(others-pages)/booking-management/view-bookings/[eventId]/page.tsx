@@ -125,6 +125,12 @@ export default function EventBookingsPage() {
         </div>
         <div className="flex items-center gap-2">
           <Link
+            href={`/event-management/view-events/${eventId}`}
+            className="rounded-lg border border-gray-300 px-3 py-2 text-xs text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
+          >
+            View Event
+          </Link>
+          <Link
             href={`/booking-management/book-event?eventId=${eventId}`}
             className="rounded-lg bg-brand-500 px-3 py-2 text-xs font-medium text-white hover:bg-brand-600"
           >
@@ -206,7 +212,7 @@ export default function EventBookingsPage() {
                     <div className="flex flex-wrap items-center gap-2">
                       <Link
                         href={`/booking-management/booking/${b.booking_id}`}
-                        className="rounded-lg border border-gray-300 px-2 py-1 text-xs hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800"
+                        className="rounded-lg border border-gray-300 px-2 py-1 text-xs text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
                       >
                         View
                       </Link>

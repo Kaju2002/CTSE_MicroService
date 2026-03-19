@@ -160,8 +160,8 @@ export default function EditBookingPage() {
         className="grid grid-cols-1 gap-4 md:grid-cols-2"
         onSubmit={handleSubmit}
       >
-        <div className="rounded-lg border border-gray-200 p-3 md:col-span-2 dark:border-gray-700">
-          <p className="text-xs font-medium uppercase text-gray-500">
+        <div className="rounded-lg border border-gray-200 p-3 md:col-span-2 text-gray-700 dark:border-gray-700 dark:text-gray-200">
+          <p className="text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
             Event Details
           </p>
           <div className="mt-2 grid grid-cols-1 gap-2 text-sm md:grid-cols-2">
@@ -203,7 +203,7 @@ export default function EditBookingPage() {
           <input
             value={customerName}
             onChange={(e) => setCustomerName(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200"
             required
           />
         </div>
@@ -213,7 +213,7 @@ export default function EditBookingPage() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200"
             required
           />
         </div>
@@ -224,7 +224,7 @@ export default function EditBookingPage() {
           <input
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200"
             required
           />
         </div>
@@ -237,7 +237,7 @@ export default function EditBookingPage() {
             min={0}
             value={ticketPrice}
             onChange={(e) => setTicketPrice(Number(e.target.value))}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200"
             required
           />
         </div>
