@@ -26,12 +26,6 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const isAdminRoute = pathname === "/" || pathname.startsWith("/(") || pathname.startsWith("/admin");
-
-  if (!isAdminRoute) {
-    return NextResponse.next();
-  }
-
   const token = request.cookies.get("auth_token")?.value;
 
   if (!token) {
