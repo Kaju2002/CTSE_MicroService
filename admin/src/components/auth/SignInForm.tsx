@@ -7,7 +7,11 @@ import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { FormEvent, useState } from "react";
-import { getUserServiceUrl, setAuthTokenCookie } from "@/lib/authClient";
+import {
+  getAuthTokenFromCookie,
+  getUserServiceUrl,
+  setAuthTokenCookie,
+} from "@/lib/authClient";
 
 export default function SignInForm() {
   const router = useRouter();
@@ -118,11 +122,19 @@ export default function SignInForm() {
                     return;
                   }
 
-                  if (data.accessToken) {
-                    setAuthTokenCookie(data.accessToken as string);
+                  if (!data.accessToken) {
+                    setError("Login succeeded but no token was returned.");
+                    return;
                   }
 
-                  router.replace("/");
+                  setAuthTokenCookie(data.accessToken as string);
+                  const token = getAuthTokenFromCookie();
+                  if (!token) {
+                    setError("Unable to persist session token. Please try again.");
+                    return;
+                  }
+
+                  window.location.assign("/");
                 } catch {
                   setError(
                     "Something went wrong. Please try again in a moment.",
