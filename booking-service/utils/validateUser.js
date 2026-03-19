@@ -1,7 +1,7 @@
-import axios from "axios";
+const axios = require("axios");
 
-export async function validateUser(token) {
-  const userServiceUrl = process.env.USER_URL || "http://user-service:4003";
+async function validateUser(token) {
+  const userServiceUrl = process.env.USER_URL || "http://localhost:4003";
   try {
     const response = await axios.get(`${userServiceUrl}/auth/validate`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -14,4 +14,6 @@ export async function validateUser(token) {
     return { valid: false, error: error.message };
   }
 }
+
+module.exports = { validateUser };
  

@@ -1,15 +1,48 @@
 const Booking = require("../models/Booking");
-const validateEvent = require("../services/eventServiceClient");
+const { validateEvent, updateEvent } = require("../services/eventServiceClient");
 // Create a new booking
 exports.createBooking = async (req, res) => {
-  console.log("Received booking request:", req.body);
-
   try {
     const now = new Date();
     const event = await validateEvent(req.body.event_id);
     if (!event) {
       return res.status(400).json({ error: "Invalid event_id" });
     }
+    const token = req.headers.authorization?.split(" ")[1];
+
+    if (event.isSeated) {
+      if (!req.body.seat_number) {
+        return res
+          .status(400)
+          .json({ error: "seat_number is required for seated events" });
+      }
+
+      const seatIndex = (event.seats || []).findIndex(
+        (seat) => seat.seatNumber === req.body.seat_number,
+      );
+      if (seatIndex === -1) {
+        return res.status(400).json({ error: "Invalid seat selection" });
+      }
+      if (event.seats[seatIndex].bookingStatus !== "available") {
+        return res.status(409).json({ error: "Seat is already reserved/sold" });
+      }
+
+      const updatedSeats = [...event.seats];
+      updatedSeats[seatIndex] = {
+        ...updatedSeats[seatIndex],
+        bookingStatus: "reserved",
+        reservedUntil: new Date(Date.now() + 10 * 60 * 1000),
+        bookingTime: now,
+      };
+
+      await updateEvent(event._id, { seats: updatedSeats }, token);
+      req.body.ticket_price = updatedSeats[seatIndex].price;
+    }
+
+    if (!event.isSeated && typeof req.body.ticket_price !== "number") {
+      return res.status(400).json({ error: "ticket_price is required" });
+    }
+
     const bookingData = {
       ...req.body,
       booking_date: now,
@@ -60,8 +93,33 @@ exports.updateBooking = async (req, res) => {
 // Delete a booking by ID
 exports.deleteBooking = async (req, res) => {
   try {
-    const booking = await Booking.findByIdAndDelete(req.params.id);
+    const token = req.headers.authorization?.split(" ")[1];
+    const booking = await Booking.findById(req.params.id);
     if (!booking) return res.status(404).json({ error: "Booking not found" });
+
+    if (booking.event_id && booking.seat_number) {
+      const event = await validateEvent(booking.event_id);
+      if (event && event.isSeated) {
+        const seatIndex = (event.seats || []).findIndex(
+          (seat) => seat.seatNumber === booking.seat_number,
+        );
+
+        if (seatIndex !== -1) {
+          const updatedSeats = [...event.seats];
+          updatedSeats[seatIndex] = {
+            ...updatedSeats[seatIndex],
+            bookingStatus: "available",
+            reservedUntil: null,
+            bookedBy: null,
+            bookingTime: null,
+          };
+
+          await updateEvent(event._id, { seats: updatedSeats }, token);
+        }
+      }
+    }
+
+    await booking.deleteOne();
     res.json({ message: "Booking deleted" });
   } catch (err) {
     res.status(500).json({ error: err.message });
