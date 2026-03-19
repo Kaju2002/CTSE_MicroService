@@ -42,6 +42,14 @@ const navItems: NavItem[] = [
     name: "Users",
     path: "/app-users",
   },
+  {
+    icon: <CalenderIcon />,
+    name: "Event Management",
+    subItems: [
+      { name: "Create Event", path: "/event-management/create-event" },
+      { name: "View Events", path: "/event-management/view-events" },
+    ],
+  },
 ];
 
 const othersItems: NavItem[] = [];
