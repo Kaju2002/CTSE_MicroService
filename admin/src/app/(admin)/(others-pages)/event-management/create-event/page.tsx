@@ -118,27 +118,27 @@ export default function CreateEventPage() {
       <form className="grid grid-cols-1 gap-4 md:grid-cols-2" onSubmit={handleSubmit}>
         <div>
           <label className="mb-1 block text-xs text-gray-500">Title</label>
-          <input className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} required />
+          <input className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:placeholder:text-gray-500" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} required />
         </div>
         <div>
           <label className="mb-1 block text-xs text-gray-500">Location</label>
-          <input className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900" placeholder="Location" value={location} onChange={(e) => setLocation(e.target.value)} />
+          <input className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:placeholder:text-gray-500" placeholder="Location" value={location} onChange={(e) => setLocation(e.target.value)} />
         </div>
         <div className="md:col-span-2">
           <label className="mb-1 block text-xs text-gray-500">Description</label>
-          <textarea className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900" placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} rows={3} />
+          <textarea className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:placeholder:text-gray-500" placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} rows={3} />
         </div>
         <div>
           <label className="mb-1 block text-xs text-gray-500">Start</label>
-          <input type="datetime-local" className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900" value={start} onChange={(e) => setStart(e.target.value)} required />
+          <input type="datetime-local" className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200" value={start} onChange={(e) => setStart(e.target.value)} required />
         </div>
         <div>
           <label className="mb-1 block text-xs text-gray-500">End</label>
-          <input type="datetime-local" className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900" value={end} onChange={(e) => setEnd(e.target.value)} required />
+          <input type="datetime-local" className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200" value={end} onChange={(e) => setEnd(e.target.value)} required />
         </div>
         <div>
           <label className="mb-1 block text-xs text-gray-500">Status</label>
-          <select className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900" value={status} onChange={(e) => setStatus(e.target.value as EventStatus)}>
+          <select className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200" value={status} onChange={(e) => setStatus(e.target.value as EventStatus)}>
             <option value="active">Active</option>
             <option value="cancelled">Cancelled</option>
             <option value="completed">Completed</option>
@@ -146,15 +146,15 @@ export default function CreateEventPage() {
         </div>
         <div>
           <label className="mb-1 block text-xs text-gray-500">Tags</label>
-          <input className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900" placeholder="Comma separated tags" value={tags} onChange={(e) => setTags(e.target.value)} />
+          <input className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:placeholder:text-gray-500" placeholder="Comma separated tags" value={tags} onChange={(e) => setTags(e.target.value)} />
         </div>
         <div>
           <label className="mb-1 block text-xs text-gray-500">Cover Image URL</label>
-          <input className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900" placeholder="https://..." value={coverImage} onChange={(e) => setCoverImage(e.target.value)} />
+          <input className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:placeholder:text-gray-500" placeholder="https://..." value={coverImage} onChange={(e) => setCoverImage(e.target.value)} />
         </div>
         <div>
           <label className="mb-1 block text-xs text-gray-500">Gallery Image URLs</label>
-          <input className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900" placeholder="Comma separated image URLs" value={galleryImages} onChange={(e) => setGalleryImages(e.target.value)} />
+          <input className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:placeholder:text-gray-500" placeholder="Comma separated image URLs" value={galleryImages} onChange={(e) => setGalleryImages(e.target.value)} />
         </div>
         <div className="md:col-span-2">
           <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
@@ -167,15 +167,15 @@ export default function CreateEventPage() {
           <>
             <div>
               <label className="mb-1 block text-xs text-gray-500">Rows</label>
-              <input type="number" min={1} className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900" placeholder="Rows" value={rows} onChange={(e) => setRows(Number(e.target.value))} />
+              <input type="number" min={1} className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:placeholder:text-gray-500" placeholder="Rows" value={rows} onChange={(e) => setRows(Number(e.target.value))} />
             </div>
             <div>
               <label className="mb-1 block text-xs text-gray-500">Columns</label>
-              <input type="number" min={1} className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900" placeholder="Columns" value={cols} onChange={(e) => setCols(Number(e.target.value))} />
+              <input type="number" min={1} className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:placeholder:text-gray-500" placeholder="Columns" value={cols} onChange={(e) => setCols(Number(e.target.value))} />
             </div>
             <div>
               <label className="mb-1 block text-xs text-gray-500">Seat Type</label>
-              <select className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900" value={seatType} onChange={(e) => setSeatType(e.target.value as SeatType)}>
+              <select className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200" value={seatType} onChange={(e) => setSeatType(e.target.value as SeatType)}>
                 <option value="VIP">VIP</option>
                 <option value="Regular">Regular</option>
                 <option value="Balcony">Balcony</option>
@@ -184,7 +184,7 @@ export default function CreateEventPage() {
             </div>
             <div>
               <label className="mb-1 block text-xs text-gray-500">Seat Price</label>
-              <input type="number" min={0} className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900" placeholder="Seat Price" value={seatPrice} onChange={(e) => setSeatPrice(Number(e.target.value))} />
+              <input type="number" min={0} className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:placeholder:text-gray-500" placeholder="Seat Price" value={seatPrice} onChange={(e) => setSeatPrice(Number(e.target.value))} />
             </div>
           </>
         )}

@@ -115,7 +115,7 @@ export default function ViewEventsPage() {
                   <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-300">{event.status || "active"}</td>
                   <td className="px-3 py-3">
                     <div className="flex flex-wrap items-center gap-2">
-                      <Link href={`/event-management/view-events/${event._id}`} className="rounded-lg border border-gray-300 px-2 py-1 text-xs hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800">
+                      <Link href={`/event-management/view-events/${event._id}`} className="rounded-lg border border-gray-300 px-2 py-1 text-xs text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800">
                         View
                       </Link>
                       <Link href={`/event-management/edit-event/${event._id}`} className="rounded-lg border border-brand-300 px-2 py-1 text-xs text-brand-600 hover:bg-brand-50 dark:border-brand-700 dark:text-brand-300 dark:hover:bg-brand-900/20">

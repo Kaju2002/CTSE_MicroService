@@ -191,7 +191,11 @@ export default function BookEventPage() {
           <select
             value={eventId}
             onChange={(e) => setEventId(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900"
+            className={`w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900 ${
+              eventId
+                ? "text-gray-800 dark:text-gray-200"
+                : "text-gray-500 dark:text-gray-400"
+            }`}
             disabled={loadingEvents}
             required
           >
@@ -252,7 +256,8 @@ export default function BookEventPage() {
           <input
             value={customerName}
             onChange={(e) => setCustomerName(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900"
+            placeholder="Enter customer name"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:placeholder:text-gray-500"
             required
           />
         </div>
@@ -262,7 +267,8 @@ export default function BookEventPage() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900"
+            placeholder="Enter email address"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:placeholder:text-gray-500"
             required
           />
         </div>
@@ -273,7 +279,8 @@ export default function BookEventPage() {
           <input
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900"
+            placeholder="Enter phone number"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:placeholder:text-gray-500"
             required
           />
         </div>
@@ -286,7 +293,8 @@ export default function BookEventPage() {
             min={0}
             value={ticketPrice}
             onChange={(e) => setTicketPrice(Number(e.target.value))}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900"
+            placeholder="Ticket price"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:placeholder:text-gray-500"
             readOnly={!!selectedEvent}
             required
           />

@@ -33,16 +33,6 @@ const navItems: NavItem[] = [
     path: "/",
   },
   {
-    icon: <UserCircleIcon />,
-    name: "User Profile",
-    path: "/profile",
-  },
-  {
-    icon: <UserCircleIcon />,
-    name: "Users",
-    path: "/app-users",
-  },
-  {
     icon: <CalenderIcon />,
     name: "Event Management",
     subItems: [
@@ -57,6 +47,16 @@ const navItems: NavItem[] = [
       { name: "Book an Event", path: "/booking-management/book-event" },
       { name: "View Bookings", path: "/booking-management/view-bookings" },
     ],
+  },
+  {
+    icon: <UserCircleIcon />,
+    name: "Users",
+    path: "/app-users",
+  },
+  {
+    icon: <UserCircleIcon />,
+    name: "Profile",
+    path: "/profile",
   },
 ];
 

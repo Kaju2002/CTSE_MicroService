@@ -69,7 +69,7 @@ export default function ViewBookingsEventsPage() {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Type event title..."
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900"
+          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:placeholder:text-gray-500"
         />
       </div>
 
@@ -127,7 +127,7 @@ export default function ViewBookingsEventsPage() {
                   <td className="px-3 py-3">
                     <Link
                       href={`/booking-management/view-bookings/${event._id}`}
-                      className="rounded-lg border border-gray-300 px-2 py-1 text-xs hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800"
+                      className="rounded-lg border border-gray-300 px-2 py-1 text-xs text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
                     >
                       View bookings
                     </Link>
