@@ -72,12 +72,18 @@ export class AuthService {
 
     // validate user by id
     async validateUserById(userId: string): Promise<User | null> {
-        const user = await this.prisma.user.findUnique({
-            where: {
-                id: userId
-            }
-        })
-        return user ?? null
+        try {
+            const user = await this.prisma.user.findUnique({
+                where: {
+                    id: userId
+                }
+            })
+            return user ?? null
+        } catch {
+            // If DB is temporarily unreachable, fail auth gracefully
+            // instead of bubbling an internal Prisma exception.
+            return null
+        }
     }
 
     // get profile of user
