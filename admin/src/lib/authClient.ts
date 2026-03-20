@@ -1,4 +1,4 @@
-const USER_SERVICE_URL = process.env.NEXT_PUBLIC_USER_SERVICE_URL || "http://localhost:4003";
+const USER_SERVICE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4003";
 
 if (!USER_SERVICE_URL) {
   // eslint-disable-next-line no-console

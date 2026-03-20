@@ -1,5 +1,5 @@
 const BOOKING_SERVICE_URL =
-  process.env.NEXT_PUBLIC_BOOKING_SERVICE_URL || "http://localhost:4001";
+  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4001";
 
 if (!BOOKING_SERVICE_URL) {
   // eslint-disable-next-line no-console
