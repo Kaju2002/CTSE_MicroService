@@ -17,8 +17,8 @@ export default function CreateEventPage() {
   const [end, setEnd] = useState("");
   const [status, setStatus] = useState<EventStatus>("active");
   const [tags, setTags] = useState("");
-  const [coverImage, setCoverImage] = useState("");
-  const [galleryImages, setGalleryImages] = useState("");
+  const [coverImageFile, setCoverImageFile] = useState<File | null>(null);
+  const [galleryImageFiles, setGalleryImageFiles] = useState<File[]>([]);
   const [isSeated, setIsSeated] = useState(true);
   const [rows, setRows] = useState(5);
   const [cols, setCols] = useState(5);
@@ -38,15 +38,6 @@ export default function CreateEventPage() {
     [tags],
   );
 
-  const parsedGallery = useMemo(
-    () =>
-      galleryImages
-        .split(",")
-        .map((img) => img.trim())
-        .filter(Boolean),
-    [galleryImages],
-  );
-
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (isSubmitting) return;
@@ -61,33 +52,41 @@ export default function CreateEventPage() {
         return;
       }
 
-      const payload: Record<string, unknown> = {
-        title,
-        description,
-        location,
-        start: new Date(start).toISOString(),
-        end: new Date(end).toISOString(),
-        status,
-        tags: parsedTags,
-        isSeated,
-        coverImage: coverImage || undefined,
-        galleryImages: parsedGallery,
-      };
-
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("location", location);
+      formData.append("start", new Date(start).toISOString());
+      formData.append("end", new Date(end).toISOString());
+      formData.append("status", status);
+      
+      // Append tags as comma-separated string
+      formData.append("tags", parsedTags.join(","));
+      
+      // Append cover image file if selected
+      if (coverImageFile) {
+        formData.append("coverImage", coverImageFile);
+      }
+      
+      // Append gallery image files
+      galleryImageFiles.forEach((file) => {
+        formData.append("galleryImages", file);
+      });
+      
+      formData.append("isSeated", String(isSeated));
       if (isSeated) {
-        payload.rows = rows;
-        payload.cols = cols;
-        payload.seatType = seatType;
-        payload.seatPrice = seatPrice;
+        formData.append("rows", String(rows));
+        formData.append("cols", String(cols));
+        formData.append("seatType", seatType);
+        formData.append("seatPrice", String(seatPrice));
       }
 
       const res = await fetch(`${getEventServiceUrl()}/events/create`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(payload),
+        body: formData,
       });
 
       const data = (await res.json().catch(() => ({}))) as {
@@ -149,12 +148,40 @@ export default function CreateEventPage() {
           <input className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:placeholder:text-gray-500" placeholder="Comma separated tags" value={tags} onChange={(e) => setTags(e.target.value)} />
         </div>
         <div>
-          <label className="mb-1 block text-xs text-gray-500">Cover Image URL</label>
-          <input className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:placeholder:text-gray-500" placeholder="https://..." value={coverImage} onChange={(e) => setCoverImage(e.target.value)} />
+          <label className="mb-1 block text-xs text-gray-500">Cover Image</label>
+          <input 
+            type="file" 
+            accept="image/*"
+            onChange={(e) => setCoverImageFile(e.target.files?.[0] || null)}
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 file:mr-3 file:rounded file:border-0 file:bg-brand-50 file:px-3 file:py-1 file:text-xs file:font-medium file:text-brand-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:file:bg-brand-900/20 dark:file:text-brand-300" 
+          />
+          {coverImageFile && (
+            <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">
+              Selected: {coverImageFile.name}
+            </p>
+          )}
         </div>
         <div>
-          <label className="mb-1 block text-xs text-gray-500">Gallery Image URLs</label>
-          <input className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:placeholder:text-gray-500" placeholder="Comma separated image URLs" value={galleryImages} onChange={(e) => setGalleryImages(e.target.value)} />
+          <label className="mb-1 block text-xs text-gray-500">Gallery Images</label>
+          <input 
+            type="file" 
+            accept="image/*"
+            multiple
+            onChange={(e) => setGalleryImageFiles(Array.from(e.target.files || []))}
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 file:mr-3 file:rounded file:border-0 file:bg-brand-50 file:px-3 file:py-1 file:text-xs file:font-medium file:text-brand-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:file:bg-brand-900/20 dark:file:text-brand-300" 
+          />
+          {galleryImageFiles.length > 0 && (
+            <div className="mt-2 space-y-1">
+              <p className="text-xs font-medium text-gray-600 dark:text-gray-400">
+                Selected files ({galleryImageFiles.length}):
+              </p>
+              <ul className="text-xs text-gray-600 dark:text-gray-400">
+                {galleryImageFiles.map((file, idx) => (
+                  <li key={idx}>• {file.name}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
         <div className="md:col-span-2">
           <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">

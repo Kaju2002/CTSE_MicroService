@@ -78,8 +78,28 @@ export default function ViewSingleEventPage() {
         <p><span className="font-medium">End:</span> {new Date(event.end).toLocaleString()}</p>
         <p className="md:col-span-2"><span className="font-medium">Description:</span> {event.description || "-"}</p>
         <p className="md:col-span-2"><span className="font-medium">Tags:</span> {event.tags?.join(", ") || "-"}</p>
-        <p className="md:col-span-2"><span className="font-medium">Cover Image:</span> {event.coverImage || "-"}</p>
-        <p className="md:col-span-2"><span className="font-medium">Gallery Images:</span> {event.galleryImages?.join(", ") || "-"}</p>
+        
+        <div className="md:col-span-2">
+          <p className="mb-2"><span className="font-medium">Cover Image:</span></p>
+          {event.coverImage ? (
+            <img src={event.coverImage} alt={event.title} className="h-48 w-full rounded-lg object-cover" />
+          ) : (
+            <p className="text-gray-500">-</p>
+          )}
+        </div>
+        
+        <div className="md:col-span-2">
+          <p className="mb-2"><span className="font-medium">Gallery Images:</span></p>
+          {event.galleryImages && event.galleryImages.length > 0 ? (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {event.galleryImages.map((image, idx) => (
+                <img key={idx} src={image} alt={`${event.title} gallery ${idx + 1}`} className="h-32 w-full rounded-lg object-cover" />
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500">-</p>
+          )}
+        </div>
       </div>
     </div>
   );
