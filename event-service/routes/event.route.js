@@ -112,7 +112,7 @@ const eventRouter = express.Router();
  *         description: Unauthorized - admin access required
  */
 // CORRECT - multipart parsing happens first
-eventRouter.post("/create", uploadEventImages, createEvent); /**
+eventRouter.post("/create", validateAdmin, uploadEventImages, createEvent); /**
  * @swagger
  * /event:
  *   get:
