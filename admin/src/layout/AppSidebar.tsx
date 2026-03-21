@@ -49,6 +49,13 @@ const navItems: NavItem[] = [
     ],
   },
   {
+    icon: <PieChartIcon />,
+    name: "Reviews",
+    subItems: [
+      { name: "Booked Events", path: "/reviews/booked-events" },
+    ],
+  },
+  {
     icon: <UserCircleIcon />,
     name: "Users",
     path: "/app-users",

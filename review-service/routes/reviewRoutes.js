@@ -6,7 +6,7 @@ const reviewController = require("../controllers/reviewController");
 router.post("/", reviewController.createReview);
 
 // Get all reviews for a particular event
-router.get("/event/:eventId", reviewController.getAllReviewsByEvent);
+router.get("/:eventId", reviewController.getAllReviewsByEvent);
 router.get("/", reviewController.getAllReviews);
 
 // Get all reviews by a particular user
