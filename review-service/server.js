@@ -10,7 +10,7 @@ mongoose
   .catch((err) => console.error("MongoDB connection error:", err));
 
 const app = express();
-const PORT = process.env.PORT || 4002;
+const PORT = process.env.PORT || 8000;
 
 app.use(cors());
 app.use(bodyParser.json());
