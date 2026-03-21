@@ -114,12 +114,55 @@ exports.updateReview = async (req, res) => {
   }
 };
 
-// Delete a review by ID
+// Delete a review by ID - USER CAN DELETE OWN, ADMIN CAN DELETE ANY
 exports.deleteReview = async (req, res) => {
   try {
-    const review = await Review.findOneAndDelete({ review_id: req.params.id });
-    if (!review) return res.status(404).json({ error: "Review not found" });
-    res.json({ message: "Review deleted" });
+    // Get the token from the Authorization header
+    const token = req.headers.authorization?.split(" ")[1];
+
+    if (!token) {
+      return res
+        .status(401)
+        .json({ error: "Access denied. No token provided." });
+    }
+
+    // Validate the token and get user details
+    const user = await validateUser(token);
+
+    if (!user) {
+      return res
+        .status(401)
+        .json({ error: "Invalid token or user not found." });
+    }
+
+    console.log("Deleting review ID:", req.params.id, "by user:", user.id);
+
+    // Get the review first
+    const review = await Review.findById(req.params.id);
+
+    if (!review) {
+      return res.status(404).json({ error: "Review not found" });
+    }
+
+    // Check if user is the owner OR is an admin
+    const isOwner = review.user_id === user.id;
+    const isAdmin = user.role === "ADMIN";
+
+    if (!isOwner && !isAdmin) {
+      return res.status(403).json({
+        error: "Forbidden. Only review owners or admins can delete reviews.",
+      });
+    }
+
+    // Delete the review
+    await Review.findByIdAndDelete(req.params.id);
+
+    console.log("Review deleted successfully");
+    res.json({
+      message: "Review deleted successfully",
+      success: true,
+      deletedBy: isAdmin ? "ADMIN" : "OWNER",
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
