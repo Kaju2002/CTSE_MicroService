@@ -1,4 +1,7 @@
 import axios from "axios";
+import http from "node:http";
+import https from "node:https";
+import { URL } from "node:url";
 
 // RFC 2616 §13.5.1 — hop-by-hop headers must never be forwarded by a proxy.
 // Using Set for O(1) lookup (consistent with METHODS_WITH_BODY below).
@@ -37,6 +40,133 @@ function sanitizeHeaders(rawHeaders) {
   );
 }
 
+/** Request headers we do not forward on raw stream proxy (keep Content-Length for multipart). */
+const STREAM_PROXY_REQ_SKIP = new Set([
+  "connection",
+  "keep-alive",
+  "transfer-encoding",
+  "te",
+  "trailer",
+  "upgrade",
+  "proxy-authorization",
+  "proxy-authenticate",
+  "host",
+  "accept-encoding",
+]);
+
+/** Response headers we do not forward back to the client. */
+const STREAM_PROXY_RES_SKIP = new Set([
+  "connection",
+  "keep-alive",
+  "transfer-encoding",
+  "trailer",
+]);
+
+function shouldStreamRawBody(req) {
+  if (!METHODS_WITH_BODY.has(req.method.toUpperCase())) return false;
+  const ct = (req.headers["content-type"] || "").toLowerCase();
+  return ct.includes("multipart/form-data");
+}
+
+/**
+ * Pipe the incoming request stream to upstream (for multipart/form-data).
+ * express.json() does not consume multipart, so req is still readable.
+ */
+function proxyRawBodyStream(req, res, targetUrlString) {
+  return new Promise((resolve) => {
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      resolve();
+    };
+
+    let target;
+    try {
+      target = new URL(targetUrlString);
+    } catch {
+      if (!res.headersSent) {
+        res.status(503).json({ message: "Invalid upstream URL" });
+      }
+      finish();
+      return;
+    }
+
+    const isHttps = target.protocol === "https:";
+    const lib = isHttps ? https : http;
+
+    /** @type {http.OutgoingHttpHeaders} */
+    const outHeaders = {};
+    for (const [k, v] of Object.entries(req.headers)) {
+      if (v === undefined) continue;
+      if (STREAM_PROXY_REQ_SKIP.has(k.toLowerCase())) continue;
+      outHeaders[k] = v;
+    }
+    outHeaders.host = target.host;
+
+    const upstreamReq = lib.request(
+      {
+        hostname: target.hostname,
+        port: target.port || (isHttps ? 443 : 80),
+        path: target.pathname + target.search,
+        method: req.method,
+        headers: outHeaders,
+        timeout: 30000,
+      },
+      (upstreamRes) => {
+        console.log(
+          `[Gateway] ← ${upstreamRes.statusCode} from ${targetUrlString}`,
+        );
+        if (!res.headersSent) {
+          res.status(upstreamRes.statusCode || 502);
+        }
+        for (const [k, v] of Object.entries(upstreamRes.headers)) {
+          if (v === undefined) continue;
+          const lk = k.toLowerCase();
+          if (STREAM_PROXY_RES_SKIP.has(lk)) continue;
+          if (Array.isArray(v)) {
+            for (const item of v) res.appendHeader(k, item);
+          } else {
+            res.setHeader(k, v);
+          }
+        }
+        upstreamRes.pipe(res);
+        upstreamRes.on("end", finish);
+        upstreamRes.on("error", (err) => {
+          console.error(
+            `[Gateway] upstream response error ${targetUrlString}: ${err.message}`,
+          );
+          finish();
+        });
+      },
+    );
+
+    upstreamReq.on("timeout", () => {
+      upstreamReq.destroy();
+      if (!res.headersSent) {
+        res.status(504).json({ message: "Upstream service timed out" });
+      }
+      finish();
+    });
+
+    upstreamReq.on("error", (err) => {
+      console.error(
+        `[Gateway] ❌ ${req.method} ${req.originalUrl} → ${targetUrlString} FAILED (stream): ${err.message}`,
+      );
+      if (!res.headersSent) {
+        res.status(503).json({
+          message: "Service unavailable (gateway could not reach upstream)",
+          error: err.message,
+        });
+      }
+      finish();
+    });
+
+    req.on("aborted", () => upstreamReq.destroy());
+    req.pipe(upstreamReq);
+  });
+}
+
 export async function proxyToService(req, res, targetBaseUrl, stripPrefix) {
   try {
     // Strip the gateway's route prefix so the upstream service
@@ -53,6 +183,11 @@ export async function proxyToService(req, res, targetBaseUrl, stripPrefix) {
 
     // ✅ Log every incoming request and where it's being forwarded
     console.log(`[Gateway] ${req.method} ${req.originalUrl} → ${targetUrl}`);
+
+    if (shouldStreamRawBody(req)) {
+      await proxyRawBodyStream(req, res, targetUrl);
+      return;
+    }
 
     const axiosConfig = {
       method: req.method,
