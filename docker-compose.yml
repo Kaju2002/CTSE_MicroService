@@ -18,6 +18,9 @@ services:
       - "4002:4002"
     env_file:
       - ./review-service/.env
+    environment:
+      EVENT_URL: http://event-service:4000
+      USER_URL: http://user-service:4003
 
   booking-service:
     build: ./booking-service
