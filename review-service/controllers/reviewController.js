@@ -1,8 +1,6 @@
-
 const Review = require("../models/reviewModel");
 const { validateUser } = require("../utils/userServiceClient");
-
-// // Create a new review
+const { getEventById } = require("../utils/eventServiceClient"); // // Create a new review
 // exports.createReview = async (req, res) => {
 //   try {
 //     const review = new Review(req.body);
@@ -13,7 +11,6 @@ const { validateUser } = require("../utils/userServiceClient");
 //   }
 // };
 
-
 // Create a new review
 exports.createReview = async (req, res) => {
   try {
@@ -21,22 +18,37 @@ exports.createReview = async (req, res) => {
     const token = req.headers.authorization?.split(" ")[1]; // extract "Bearer <token>"
 
     if (!token) {
-      return res.status(401).json({ error: "Access denied. No token provided." });
+      return res
+        .status(401)
+        .json({ error: "Access denied. No token provided." });
     }
 
     // 2. Validate the token and get user details from User Service
     const user = await validateUser(token);
 
     if (!user) {
-      return res.status(401).json({ error: "Invalid token or user not found." });
+      return res
+        .status(401)
+        .json({ error: "Invalid token or user not found." });
     }
 
     // 3. Construct the user_name from firstName and lastName (handling nulls)
-    const userName = `${user.firstName || ""} ${user.lastName || ""}`.trim() || "Anonymous User";
+    const userName =
+      `${user.firstName || ""} ${user.lastName || ""}`.trim() ||
+      "Anonymous User";
 
-    // 4. Create the review object with user details populated automatically
+    // 4. Fetch event details from event-service
+    const event = await getEventById(req.body.event_id);
+    if (!event || !event.title) {
+      return res
+        .status(400)
+        .json({ error: "Invalid event_id or event not found." });
+    }
+
+    // 5. Create the review object with user and event details populated automatically
     const reviewData = {
-      ...req.body, // existing fields like event_id, event_name, rating, comment
+      ...req.body,
+      event_name: event.title, // use 'title' from event-service as event_name
       user_id: user.id,
       user_name: userName,
       email: user.email,
@@ -44,7 +56,7 @@ exports.createReview = async (req, res) => {
 
     const review = new Review(reviewData);
     await review.save();
-    
+
     res.status(201).json(review);
   } catch (err) {
     res.status(400).json({ error: err.message });
