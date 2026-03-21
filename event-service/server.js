@@ -5,8 +5,6 @@ import connectDB from "./config/mongodb.js";
 import eventRouter from "./routes/event.route.js";
 import { swaggerUi, specs } from "./config/swagger.js";
 
-// import connectCloudinary from "./config/cloudinary.js";
-
 //app config
 const app = express();
 const port = process.env.PORT || 4000;
@@ -14,7 +12,19 @@ connectDB();
 
 //middleware
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
+
+// Diagnostic middleware for multipart requests
+app.use((req, res, next) => {
+  if (req.method === "POST" && req.path === "/events/create") {
+    console.log("Request received:");
+    console.log("Content-Type:", req.get("content-type"));
+    console.log("req.body:", req.body);
+    console.log("req.files:", req.files);
+  }
+  next();
+});
 
 //api endpoints
 app.use("/events", eventRouter);
