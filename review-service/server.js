@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const { swaggerUi, specs } = require("./config/swagger");
 
 mongoose
   .connect(process.env.MONGODB_URI)
@@ -14,6 +15,9 @@ const PORT = process.env.PORT || 4002;
 
 app.use(cors());
 app.use(bodyParser.json());
+
+// Swagger setup
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 // app.get("/", (req, res) => {
 //   res.send("Review Service API is running");
