@@ -19,9 +19,9 @@ app.use(bodyParser.json());
 // Swagger setup
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
-// app.get("/", (req, res) => {
-//   res.send("Review Service API is running");
-// });
+app.get("/", (req, res) => {
+  res.send("Review Service API is running");
+});
 
 const reviewRoutes = require("./routes/reviewRoutes");
 app.use("/reviews", reviewRoutes);
