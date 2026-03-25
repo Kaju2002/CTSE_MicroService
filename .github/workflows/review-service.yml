@@ -19,13 +19,11 @@ jobs:
         with:
           args: >
             -Dsonar.projectKey=ctse_review_service
-            -Dsonar.projectName=CTSE Review Service
             -Dsonar.organization=kaju2002
-            -Dsonar.projectBaseDir=./review-service
-            -Dsonar.sources=.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
+          SONARQUBE_SCANNER_PARAMS: "-Dsonar.projectBaseDir=./review-service"
 
   deploy:
     needs: sonar
