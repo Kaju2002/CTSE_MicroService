@@ -1,10 +1,10 @@
-name: User Service CI/CD
+name: Booking Service CI/CD
 
 on:
   push:
     branches: [main]
     paths:
-      - "user-service/**"
+      - "booking-service/**"
 
 jobs:
   deploy:
@@ -22,9 +22,9 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: ./user-service
+          context: ./booking-service
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/user-service:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/booking-service:latest
 
       # UNCOMMENT AND CONFIGURE WHEN AWS DEPLOYMENT IS READY
       # - name: Configure AWS credentials
@@ -37,6 +37,6 @@ jobs:
       # - name: Deploy to ECS
       #   run: |
       #     aws ecs update-service \
-      #       --cluster ctse-user-cluster \
-      #       --service user-service-task-service-XXXXX \
+      #       --cluster ctse-booking-cluster \
+      #       --service booking-service-task-service-XXXXX \
       #       --force-new-deployment

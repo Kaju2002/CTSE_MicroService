@@ -1,10 +1,10 @@
-name: User Service CI/CD
+name: Review Service CI/CD
 
 on:
   push:
     branches: [main]
     paths:
-      - "user-service/**"
+      - "review-service/**"
 
 jobs:
   deploy:
@@ -22,9 +22,9 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: ./user-service
+          context: ./review-service
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/user-service:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/review-service:latest
 
       # UNCOMMENT AND CONFIGURE WHEN AWS DEPLOYMENT IS READY
       # - name: Configure AWS credentials
@@ -37,6 +37,6 @@ jobs:
       # - name: Deploy to ECS
       #   run: |
       #     aws ecs update-service \
-      #       --cluster ctse-user-cluster \
-      #       --service user-service-task-service-XXXXX \
+      #       --cluster ctse-review-cluster \
+      #       --service review-service-task-service-XXXXX \
       #       --force-new-deployment
