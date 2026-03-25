@@ -1,4 +1,4 @@
-name: Review Service CI/CD
+name: Review Service CI/CD with SAST
 
 on:
   push:
@@ -7,7 +7,26 @@ on:
       - "review-service/**"
 
 jobs:
+  sonar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONARCLOUD_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=ctse_review_service
+            -Dsonar.organization=u-kajanthan
+
   deploy:
+    needs: sonar
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
