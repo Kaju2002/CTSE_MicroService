@@ -4,8 +4,6 @@ name: Review Service CI/CD with SAST
 on:
   push:
     branches: [main]
-    paths:
-      - "review-service/**"
 
 jobs:
   sonar:
