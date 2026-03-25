@@ -20,7 +20,7 @@ app.use(bodyParser.json());
 
 // Health check route
 app.get("/", (req, res) => {
-  res.send("Booking Service API is running");
+  res.send("Booking Service running ");
 });
 
 // Booking routes
