@@ -1,4 +1,5 @@
 name: Review Service CI/CD with SAST
+# Latest update: Force workflow refresh with correct SonarCloud action
 
 on:
   push:
