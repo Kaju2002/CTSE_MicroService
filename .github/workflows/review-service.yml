@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "review-service/**"
+      - ".github/workflows/review-service.yml"
 
 jobs:
   deploy:
