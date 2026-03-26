@@ -1,7 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const bookingController = require('../controllers/bookingController');
-const  validateUserMiddleware  = require('../middleware/validateUserMiddleware');
+const bookingController = require("../controllers/bookingController");
+const validateUserMiddleware = require("../middleware/validateUserMiddleware");
 
 /**
  * @swagger
@@ -33,7 +33,7 @@ const  validateUserMiddleware  = require('../middleware/validateUserMiddleware')
  *       400:
  *         description: Bad request
  */
-router.post('/', validateUserMiddleware, bookingController.createBooking);
+router.post("/", validateUserMiddleware, bookingController.createBooking);
 
 /**
  * @swagger
@@ -44,7 +44,7 @@ router.post('/', validateUserMiddleware, bookingController.createBooking);
  *       200:
  *         description: List of bookings
  */
-router.get('/',validateUserMiddleware, bookingController.getBookings);
+router.get("/", validateUserMiddleware, bookingController.getBookings);
 
 /**
  * @swagger
@@ -63,7 +63,7 @@ router.get('/',validateUserMiddleware, bookingController.getBookings);
  *       404:
  *         description: Booking not found
  */
-router.get('/:id',validateUserMiddleware, bookingController.getBookingById);
+router.get("/:id", validateUserMiddleware, bookingController.getBookingById);
 
 /**
  * @swagger
@@ -88,7 +88,7 @@ router.get('/:id',validateUserMiddleware, bookingController.getBookingById);
  *       404:
  *         description: Booking not found
  */
-router.put('/:id',validateUserMiddleware, bookingController.updateBooking);
+router.put("/:id", validateUserMiddleware, bookingController.updateBooking);
 
 /**
  * @swagger
@@ -107,6 +107,6 @@ router.put('/:id',validateUserMiddleware, bookingController.updateBooking);
  *       404:
  *         description: Booking not found
  */
-router.delete('/:id',validateUserMiddleware, bookingController.deleteBooking);
+router.delete("/:id", validateUserMiddleware, bookingController.deleteBooking);
 
 module.exports = router;

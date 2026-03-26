@@ -1,6 +1,33 @@
 version: "3.8"
 
 services:
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  notification-service:
+    build: ./notification-service
+    image: notification-service:latest
+    container_name: notification-service
+    ports:
+      - "4004:4004"
+    env_file:
+      - ./notification-service/.env
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
   user-service:
     build: ./user-service
     image: user-service:latest
@@ -21,6 +48,10 @@ services:
     environment:
       EVENT_URL: http://event-service:4000
       USER_URL: http://user-service:4003
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
 
   booking-service:
     build: ./booking-service
@@ -33,6 +64,10 @@ services:
     environment:
       EVENT_URL: http://event-service:4000
       USER_URL: http://user-service:4003
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
 
   event-service:
     build: ./event-service
@@ -44,6 +79,12 @@ services:
       - ./event-service/.env
     environment:
       USER_URL: http://user-service:4003
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      user-service:
+        condition: service_started
 
   api-gateway:
     build: ./api-gateway
@@ -59,10 +100,8 @@ services:
       BOOKING_URL: http://booking-service:4001
       REVIEW_URL: http://review-service:4002
     depends_on:
+      - notification-service
       - user-service
       - event-service
       - booking-service
       - review-service
-
-volumes:
-  postgres_data:

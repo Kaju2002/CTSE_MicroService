@@ -3,8 +3,8 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-
 const mongoose = require("mongoose");
+const { initializePublisher } = require("./utils/rabbitmqPublisher");
 
 // Connect to MongoDB
 mongoose
@@ -20,12 +20,27 @@ app.use(bodyParser.json());
 
 // Health check route
 app.get("/", (req, res) => {
-  res.send("Booking Service running"); 
+  res.send("Booking Service running");
 });
 
 // Booking routes
 const bookingRoutes = require("./routes/bookingRoutes");
 app.use("/bookings", bookingRoutes);
+
+// Start server with RabbitMQ initialization
+async function startServer() {
+  try {
+    // Initialize RabbitMQ publisher
+    await initializePublisher();
+    console.log("✓ RabbitMQ Publisher initialized");
+  } catch (error) {
+    console.error("❌ Failed to initialize RabbitMQ:", error);
+    process.exit(1);
+  }
+}
+
+// Initialize before test routes
+startServer();
 
 // Swagger setup
 const { swaggerUi, specs } = require("./swagger");

@@ -4,6 +4,7 @@ import "dotenv/config";
 import connectDB from "./config/mongodb.js";
 import eventRouter from "./routes/event.route.js";
 import { swaggerUi, specs } from "./config/swagger.js";
+import { initializePublisher } from "./utils/rabbitmqPublisher.js";
 
 //app config
 const app = express();
@@ -34,7 +35,23 @@ app.get("/", (req, res) => {
   res.send("Welcome to the Event Service!");
 });
 
-app.listen(port, () => {
-  console.log("Server Started", port);
-  console.log(`Swagger docs available at http://localhost:${port}/api-docs`);
-});
+// Initialize services and start server
+async function startServer() {
+  try {
+    // Initialize RabbitMQ Publisher
+    await initializePublisher();
+    console.log("✓ RabbitMQ Publisher initialized");
+
+    app.listen(port, () => {
+      console.log("Server Started", port);
+      console.log(
+        `Swagger docs available at http://localhost:${port}/api-docs`,
+      );
+    });
+  } catch (error) {
+    console.error("❌ Error starting server:", error);
+    process.exit(1);
+  }
+}
+
+startServer();

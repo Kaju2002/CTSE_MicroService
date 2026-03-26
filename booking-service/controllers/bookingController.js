@@ -1,5 +1,9 @@
 const Booking = require("../models/Booking");
-const { validateEvent, updateEvent } = require("../services/eventServiceClient");
+const {
+  validateEvent,
+  updateEvent,
+} = require("../services/eventServiceClient");
+const { publishBookingConfirmed } = require("../utils/rabbitmqPublisher");
 // Create a new booking
 exports.createBooking = async (req, res) => {
   try {
@@ -8,6 +12,8 @@ exports.createBooking = async (req, res) => {
     if (!event) {
       return res.status(400).json({ error: "Invalid event_id" });
     }
+
+    // Extract token from authenticated user
     const token = req.headers.authorization?.split(" ")[1];
 
     if (event.isSeated) {
@@ -35,6 +41,7 @@ exports.createBooking = async (req, res) => {
         bookingTime: now,
       };
 
+      // Pass token to updateEvent for authorization
       await updateEvent(event._id, { seats: updatedSeats }, token);
       req.body.ticket_price = updatedSeats[seatIndex].price;
     }
@@ -50,6 +57,10 @@ exports.createBooking = async (req, res) => {
     };
     const booking = new Booking(bookingData);
     await booking.save();
+
+    // Publish booking confirmation to RabbitMQ
+    await publishBookingConfirmed(booking);
+
     res.status(201).json(booking);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -125,7 +136,9 @@ exports.updateBooking = async (req, res) => {
           currentSeatNumber !== nextSeatNumber &&
           event.seats[newSeatIndex].bookingStatus !== "available"
         ) {
-          return res.status(409).json({ error: "Seat is already reserved/sold" });
+          return res
+            .status(409)
+            .json({ error: "Seat is already reserved/sold" });
         }
 
         const updatedSeats = [...event.seats];

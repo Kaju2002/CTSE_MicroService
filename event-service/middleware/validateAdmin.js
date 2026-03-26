@@ -10,6 +10,12 @@ export async function validateAdmin(req, res, next) {
   if (validation.user?.role !== "ADMIN") {
     return res.status(403).json({ message: "Admin only can create event." });
   }
+
+  console.log(
+    "✓ validateAdmin - User authenticated with email:",
+    validation.user?.email,
+  );
+
   req.user = validation.user;
   next();
 }

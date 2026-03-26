@@ -6,6 +6,7 @@ import {
   getImageUrls,
   deleteMultipleImages,
 } from "../cloudinary/cloudinaryHelper.js";
+import { publishEventCreated } from "../utils/rabbitmqPublisher.js";
 
 export async function createEvent(req, res) {
   try {
@@ -114,6 +115,35 @@ export async function createEvent(req, res) {
 
     const event = new Event(eventData);
     await event.save();
+
+    // Get organizer email from authenticated user
+    const organizerEmail = req.user?.email;
+
+    console.log("📝 Event created, extracting organizer details:");
+    console.log("  - req.user._id:", req.user?._id);
+    console.log("  - req.user.email:", organizerEmail);
+    console.log("  - req.user.role:", req.user?.role);
+
+    if (!organizerEmail) {
+      console.warn("⚠️ No organizer email found in req.user");
+      console.warn("  - req.user contents:", JSON.stringify(req.user, null, 2));
+    }
+
+    // Publish to RabbitMQ for notification service
+    const publishData = {
+      eventId: event._id,
+      event_name: event.title,
+      organizer_email: organizerEmail,
+      start: event.start,
+      location: event.location,
+      createdAt: new Date(),
+    };
+
+    console.log(
+      "📤 Publishing to RabbitMQ with data:",
+      JSON.stringify(publishData, null, 2),
+    );
+    await publishEventCreated(publishData);
 
     res.status(201).json({ message: "Event created successfully", event });
   } catch (error) {
