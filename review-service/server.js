@@ -27,5 +27,5 @@ const reviewRoutes = require("./routes/reviewRoutes");
 app.use("/reviews", reviewRoutes);
 
 app.listen(PORT, () => {
-  console.log(`Review Service running on port ${PORT}`);
+  console.log(`Review Service running on port ${PORT} done`);
 });

@@ -31,7 +31,7 @@ app.use("/events", eventRouter);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 app.get("/", (req, res) => {
-  res.send("Welcome to the Event Service API!");
+  res.send("Welcome to the Event Service!");
 });
 
 app.listen(port, () => {
