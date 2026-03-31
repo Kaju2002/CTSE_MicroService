@@ -12,7 +12,13 @@ console.log("EVENT_URL:", process.env.EVENT_URL);
 const app = express();
 app.use(helmet()); // Security headers
 app.use(cors());
-app.use(express.json());
+
+// Skip JSON parsing for multipart/form-data — let proxy handle it
+app.use((req, res, next) => {
+  const ct = req.headers["content-type"] || "";
+  if (ct.includes("multipart/form-data")) return next(); // skip for multipart
+  express.json()(req, res, next);
+});
 
 // Gateway routes
 app.use("/", gatewayRoutes);

@@ -13,12 +13,22 @@ connectDB();
 
 //middleware
 app.use(cors());
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ limit: "50mb", extended: true }));
+
+// Skip body parsers for multipart/form-data — let multer handle it
+app.use((req, res, next) => {
+  const ct = req.headers["content-type"] || "";
+  if (ct.includes("multipart/form-data")) {
+    return next(); // let multer handle it
+  }
+  express.json({ limit: "50mb" })(req, res, (err) => {
+    if (err) return next(err);
+    express.urlencoded({ limit: "50mb", extended: true })(req, res, next);
+  });
+});
 
 // Diagnostic middleware for multipart requests
 app.use((req, res, next) => {
-  if (req.method === "POST" && req.path === "/events/create") {
+  if (req.method === "POST" && req.path === "/create") {
     console.log("Request received:");
     console.log("Content-Type:", req.get("content-type"));
     console.log("req.body:", req.body);
