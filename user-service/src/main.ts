@@ -1,9 +1,18 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { initializePublisher } from './utils/rabbitmqPublisher';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // Initialize RabbitMQ publisher before server starts
+  try {
+    await initializePublisher();
+  } catch (error) {
+    console.error('Failed to initialize RabbitMQ publisher:', error);
+    console.warn('Server will start but notifications will not be published');
+  }
 
   // Enable CORS so the Next.js admin app can call this service
   const allowedOrigins = process.env.ADMIN_ORIGIN?.split(',').map((o) =>

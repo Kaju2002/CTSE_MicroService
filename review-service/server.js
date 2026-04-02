@@ -4,6 +4,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const { swaggerUi, specs } = require("./config/swagger");
+const { initializePublisher } = require("./utils/rabbitmqPublisher");
 
 mongoose
   .connect(process.env.MONGODB_URI)
@@ -26,6 +27,16 @@ app.get("/", (req, res) => {
 const reviewRoutes = require("./routes/reviewRoutes");
 app.use("/reviews", reviewRoutes);
 
+// Initialize RabbitMQ Publisher on startup
+initializePublisher()
+  .then(() => {
+    console.log("✓ RabbitMQ publisher initialized successfully");
+  })
+  .catch((error) => {
+    console.error("❌ Failed to initialize RabbitMQ publisher:", error);
+    process.exit(1);
+  });
+
 app.listen(PORT, () => {
-  console.log(`Review Service running on port ${PORT} done`);
+  console.log(`Review Service running on port ${PORT}`);
 });

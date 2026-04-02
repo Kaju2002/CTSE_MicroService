@@ -1,7 +1,9 @@
 const Review = require("../models/reviewModel");
 const { validateUser } = require("../utils/userServiceClient");
-const { getEventById } = require("../utils/eventServiceClient"); // // Create a new review
-// exports.createReview = async (req, res) => {
+const { getEventById } = require("../utils/eventServiceClient");
+const { publishReviewSubmitted } = require("../utils/rabbitmqPublisher");
+
+// Create a new review
 //   try {
 //     const review = new Review(req.body);
 //     await review.save();
@@ -56,6 +58,18 @@ exports.createReview = async (req, res) => {
 
     const review = new Review(reviewData);
     await review.save();
+
+    // 6. Publish review submitted event to notification service
+    const publishData = {
+      organizer_email: event.organizer_email || process.env.ADMIN_EMAIL,
+      event_name: event.title,
+      user_name: userName,
+      rating: review.rating,
+      comment: review.comment,
+    };
+
+    await publishReviewSubmitted(publishData);
+    console.log("✓ Review created and notification published");
 
     res.status(201).json(review);
   } catch (err) {

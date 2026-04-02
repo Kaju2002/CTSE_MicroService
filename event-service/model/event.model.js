@@ -60,6 +60,8 @@ const EventSchema = new mongoose.Schema(
 
     coverImage: String,
     galleryImages: [String],
+    organizer_id: { type: String },
+    organizer_email: { type: String },
   },
   { timestamps: true },
 );

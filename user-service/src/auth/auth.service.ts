@@ -10,6 +10,7 @@ import { ForgetPasswordDto } from "./dto/forgot-password.dto"
 import { MailService } from "../mail/mail.service"
 import { ResetPasswordDto } from "./dto/reset-password.dto"
 import { sanitizeUser } from "src/users/user.utils"
+import { publishUserRegistered } from "src/utils/rabbitmqPublisher"
 
 @Injectable()
 export class AuthService {
@@ -40,6 +41,20 @@ export class AuthService {
                 isActive: true
             }
         })
+
+        //publish user registered event to RabbitMQ
+        try {
+            await publishUserRegistered({
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                createdAt: user.createdAt
+            })
+        } catch (error) {
+            console.error("Warning: Failed to publish user registered event:", error)
+            // Don't throw error - allow registration to succeed even if notification fails
+        }
+
         const token = this.issueToken(user)
         return {
             user: sanitizeUser(user),

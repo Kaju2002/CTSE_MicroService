@@ -36,6 +36,11 @@ services:
       - "4003:4003"
     env_file:
       - ./user-service/.env
+    environment:
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
 
   review-service:
     build: ./review-service

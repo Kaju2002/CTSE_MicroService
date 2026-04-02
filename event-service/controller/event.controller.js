@@ -96,6 +96,10 @@ export async function createEvent(req, res) {
       }
     }
 
+    // Get organizer details from authenticated user
+    const organizerEmail = req.user?.email;
+    const organizerId = req.user?._id;
+
     const eventData = {
       title,
       start,
@@ -104,6 +108,8 @@ export async function createEvent(req, res) {
       seats,
       ...(coverImageUrl && { coverImage: coverImageUrl }),
       ...(galleryImageUrls.length > 0 && { galleryImages: galleryImageUrls }),
+      organizer_id: organizerId,
+      organizer_email: organizerEmail,
     };
 
     // Add optional fields
@@ -115,9 +121,6 @@ export async function createEvent(req, res) {
 
     const event = new Event(eventData);
     await event.save();
-
-    // Get organizer email from authenticated user
-    const organizerEmail = req.user?.email;
 
     console.log("📝 Event created, extracting organizer details:");
     console.log("  - req.user._id:", req.user?._id);
