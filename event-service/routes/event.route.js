@@ -5,11 +5,13 @@ import {
   getEventById,
   getEvents,
   updateEvent,
+  updateEventSeats,
   uploadCoverImage,
   uploadGalleryImages,
   deleteEventImage,
 } from "../controller/event.controller.js";
 import { validateAdmin } from "../middleware/validateAdmin.js";
+import { validateAuthUser } from "../middleware/validateAuthUser.js";
 import {
   uploadEventImages,
   uploadCover,
@@ -265,6 +267,8 @@ eventRouter.get("/:id", getEventById);
  *             example:
  *               message: "Event not found"
  */
+// Booking flows (USER token): only the seats array may change here.
+eventRouter.put("/:id/seats", validateAuthUser, updateEventSeats);
 eventRouter.put("/:id", validateAdmin, updateEvent);
 /**
  * @swagger

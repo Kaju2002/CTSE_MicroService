@@ -15,7 +15,7 @@ mongoose
 const app = express();
 const PORT = process.env.PORT || 4001;
 
-app.use(cors());
+app.use(cors(['http://localhost:3000','http://localhost:3002']));
 app.use(bodyParser.json());
 
 // Health check route

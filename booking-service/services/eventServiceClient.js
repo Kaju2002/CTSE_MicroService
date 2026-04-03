@@ -18,9 +18,12 @@ async function updateEvent(eventId, payload, token) {
   const headers = token
     ? { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }
     : { "Content-Type": "application/json" };
-  const response = await axios.put(`${eventServiceUrl}/events/${eventId}`, payload, {
-    headers,
-  });
+  // Seat updates must not use admin-only PUT /events/:id (403 for USER role).
+  const response = await axios.put(
+    `${eventServiceUrl}/events/${eventId}/seats`,
+    { seats: payload.seats },
+    { headers },
+  );
   return response.data;
 }
 
