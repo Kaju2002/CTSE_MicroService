@@ -1,6 +1,6 @@
 import * as amqp from 'amqplib';
 
-let connection: amqp.ChannelModel; // ✅ was amqp.Connection
+let connection: amqp.Connection;
 let channel: amqp.Channel;
 
 /**
