@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 import { PrismaService } from './prisma/prisma.service';
-import { Response } from 'express';
+import type { Response } from 'express';
 import { Res } from '@nestjs/common';
 
 @Controller()
