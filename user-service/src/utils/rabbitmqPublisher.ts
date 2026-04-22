@@ -9,7 +9,7 @@ let channel: amqp.Channel;
 export async function initializePublisher(): Promise<void> {
   try {
     const url = process.env.RABBITMQ_URL;
-    if (!url) throw new Error('RABBITMQ_URL is not defined'); // ✅ guard undefined
+    if (!url) throw new Error('RABBITMQ_URL is not   defined'); // ✅ guard undefined
 
     connection = await amqp.connect(url); // ✅ typed string, not string | undefined
     channel = await connection.createChannel(); // ✅ createChannel exists on ChannelModel
