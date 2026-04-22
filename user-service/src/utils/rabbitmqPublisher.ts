@@ -1,6 +1,6 @@
 import * as amqp from 'amqplib';
 
-let connection: amqp.Connection;
+let connection: amqp.ChannelModel; // ✅ was amqp.Connection
 let channel: amqp.Channel;
 
 /**
@@ -8,10 +8,12 @@ let channel: amqp.Channel;
  */
 export async function initializePublisher(): Promise<void> {
   try {
-    connection = await amqp.connect(process.env.RABBITMQ_URL);
-    channel = await connection.createChannel();
+    const url = process.env.RABBITMQ_URL;
+    if (!url) throw new Error('RABBITMQ_URL is not defined'); // ✅ guard undefined
 
-    // Assert the user.registered queue exists (durable)
+    connection = await amqp.connect(url); // ✅ typed string, not string | undefined
+    channel = await connection.createChannel(); // ✅ createChannel exists on ChannelModel
+
     await channel.assertQueue('user.registered', { durable: true });
 
     console.log(
@@ -45,10 +47,13 @@ export async function publishUserRegistered(userData: {
       createdAt: userData.createdAt,
     };
 
-    // Send to queue with persistent flag
-    channel.sendToQueue('user.registered', Buffer.from(JSON.stringify(message)), {
-      persistent: true,
-    });
+    channel.sendToQueue(
+      'user.registered',
+      Buffer.from(JSON.stringify(message)),
+      {
+        persistent: true,
+      },
+    );
 
     console.log('✓ Published to RabbitMQ - user.registered:');
     console.log('  - email:', message.email);
