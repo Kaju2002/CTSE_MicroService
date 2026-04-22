@@ -9,7 +9,7 @@ export async function initializePublisher() {
     await channel.assertQueue("event.created", { durable: true });
     console.log("✓ RabbitMQ Publisher initialized");
   } catch (error) {
-    console.error("❌ RabbitMQ Publisher error:", error);
+    console.error("❌ RabbitMQ Publisher  error:", error);
     throw error;
   }
 }
