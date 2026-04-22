@@ -15,12 +15,25 @@ mongoose
 const app = express();
 const PORT = process.env.PORT || 4001;
 
-app.use(cors(['http://localhost:3000','http://localhost:3002']));
+app.use(cors(["http://localhost:3000", "http://localhost:3002"]));
 app.use(bodyParser.json());
 
 // Health check route
 app.get("/", (req, res) => {
   res.send("Booking Service running");
+});
+
+// AWS ECS Health Check endpoint
+app.get("/health", (req, res) => {
+  const healthCheck = {
+    uptime: process.uptime(),
+    status: "OK",
+    timestamp: new Date().toISOString(),
+    service: "booking-service",
+    mongodb:
+      mongoose.connection.readyState === 1 ? "connected" : "disconnected",
+  };
+  res.status(200).json(healthCheck);
 });
 
 // Booking routes
