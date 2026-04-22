@@ -34,6 +34,7 @@ app.get("/health", (req, res) => {
       mongoose.connection.readyState === 1 ? "connected" : "disconnected",
   };
   res.status(200).json(healthCheck);
+  
 });
 
 // Booking routes
