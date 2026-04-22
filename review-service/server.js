@@ -24,6 +24,23 @@ app.get("/", (req, res) => {
   res.send("Review Service API is running");
 });
 
+// Health check endpoint for ECS
+app.get("/health", (req, res) => {
+  const healthcheck = {
+    uptime: process.uptime(),
+    timestamp: Date.now(),
+    mongodb:
+      mongoose.connection.readyState === 1 ? "connected" : "disconnected",
+    status: mongoose.connection.readyState === 1 ? "OK" : "UNHEALTHY",
+  };
+
+  if (mongoose.connection.readyState === 1) {
+    res.status(200).json(healthcheck);
+  } else {
+    res.status(503).json(healthcheck);
+  }
+});
+
 const reviewRoutes = require("./routes/reviewRoutes");
 app.use("/reviews", reviewRoutes);
 
