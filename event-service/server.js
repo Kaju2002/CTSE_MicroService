@@ -51,17 +51,21 @@ async function startServer() {
     // Initialize RabbitMQ Publisher
     await initializePublisher();
     console.log("✓ RabbitMQ Publisher initialized");
-
-    app.listen(port, () => {
-      console.log("Server Started", port);
-      console.log(
-        `Swagger docs available at http://localhost:${port}/api-docs`,
-      );
-    });
   } catch (error) {
-    console.error("❌ Error starting server:", error);
-    process.exit(1);
+    console.error("❌ RabbitMQ failed, continuing without it:", error);
+    // Don't crash — graceful degradation for production
   }
 }
 
-startServer();
+async function bootstrap() {
+  await startServer();
+  
+  app.listen(port, "0.0.0.0", () => {
+    console.log("Server Started on 0.0.0.0:", port);
+    console.log(
+      `Swagger docs available at http://localhost:${port}/api-docs`,
+    );
+  });
+}
+
+bootstrap();
