@@ -45,6 +45,16 @@ app.get("/", (req, res) => {
   res.send("Hello Welcome to the Event Service !");
 });
 
+// Health check endpoint for ALB
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    service: "event-service",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
+
 // Initialize services and start server
 async function startServer() {
   try {
