@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FormEvent, useEffect, useMemo, useState } from "react";
+import React, { FormEvent, Suspense, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getAuthTokenFromCookie } from "@/lib/authClient";
@@ -22,7 +22,7 @@ type EventItem = {
   seats?: Seat[];
 };
 
-export default function BookEventPage() {
+function BookEventContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const preselectedEventId = searchParams.get("eventId") || "";
@@ -311,6 +311,14 @@ export default function BookEventPage() {
         </button>
       </form>
     </div>
+  );
+}
+
+export default function BookEventPage() {
+  return (
+    <Suspense>
+      <BookEventContent />
+    </Suspense>
   );
 }
 
