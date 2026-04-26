@@ -55,6 +55,7 @@ const EventSchema = new mongoose.Schema(
     tags: [String],
 
     // For seat-map events:
+    //sett
     isSeated: { type: Boolean, default: true },
     seats: [SeatSchema],
 

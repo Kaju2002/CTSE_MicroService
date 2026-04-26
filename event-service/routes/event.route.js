@@ -18,6 +18,7 @@ import {
   uploadGallery,
 } from "../cloudinary/upload.js";
 
+
 const eventRouter = express.Router();
 /**
  * @swagger
