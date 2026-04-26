@@ -91,7 +91,7 @@ export default function ForgotPasswordPage() {
               )}
 
               <div>
-                <Button className="w-full" size="sm" disabled={isSubmitting}>
+                <Button className="w-full" size="sm" type="submit" disabled={isSubmitting}>
                   {isSubmitting ? "Sending..." : "Send reset code"}
                 </Button>
               </div>

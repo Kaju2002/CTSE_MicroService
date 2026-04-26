@@ -197,7 +197,7 @@ export default function SignInForm() {
                   <p className="text-sm text-error-500">{error}</p>
                 )}
                 <div>
-                  <Button className="w-full" size="sm" disabled={isSubmitting}>
+                  <Button className="w-full" size="sm" type="submit" disabled={isSubmitting}>
                     {isSubmitting ? "Signing in..." : "Sign in"}
                   </Button>
                 </div>
