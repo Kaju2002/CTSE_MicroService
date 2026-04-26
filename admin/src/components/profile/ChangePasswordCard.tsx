@@ -124,7 +124,7 @@ export default function ChangePasswordCard() {
           </p>
         )}
 
-        <Button size="sm" disabled={isSubmitting}>
+        <Button size="sm" type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Saving..." : "Save changes"}
         </Button>
       </form>
