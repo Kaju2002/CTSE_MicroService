@@ -72,6 +72,17 @@ const getCroppedImgCircle = async (
   });
 };
 
+const isValidImageSrc = (src: string | null | undefined): src is string => {
+  if (!src) return false;
+  if (src.startsWith("/") || src.startsWith("data:")) return true;
+  try {
+    const url = new URL(src);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
+};
+
 export default function AvatarUpload({
   label = "Avatar",
   value,
@@ -200,7 +211,7 @@ export default function AvatarUpload({
     <div className="w-full">
       {label && <Label>{label}</Label>}
       <div className="mt-2 flex items-center gap-4">
-        {value ? (
+        {isValidImageSrc(value) ? (
           <div className="relative">
             <div className="relative w-20 h-20 overflow-hidden rounded-full border-2 border-gray-200 dark:border-gray-700">
               <Image
@@ -263,7 +274,7 @@ export default function AvatarUpload({
                 d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
               />
             </svg>
-            {value ? "Change Avatar" : "Upload Avatar"}
+            {isValidImageSrc(value) ? "Change Avatar" : "Upload Avatar"}
           </label>
         </div>
       </div>
