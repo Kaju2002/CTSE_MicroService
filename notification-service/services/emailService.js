@@ -96,14 +96,15 @@ export async function sendEventCreatedEmail(data) {
 
 export async function sendBookingConfirmedEmail(data) {
   const {
-    attendee_email,
-    event_title,
-    event_date,
-    booking_id,
+    user_email,
+    event_name,
+    booking_date,
+    bookingId,
     seat_number,
-    price,
+    ticket_price,
+    customer_name,
   } = data;
-  const subject = `Booking Confirmed for '${event_title}'`;
+  const subject = `Booking Confirmed for '${event_name}'`;
 
   try {
     const htmlContent = `
@@ -123,22 +124,22 @@ export async function sendBookingConfirmedEmail(data) {
           <div class="container">
             <div class="header"><h1>✓ Booking Confirmed</h1></div>
             <div class="content">
-              <p>Hello,</p>
+              <p>Hello ${customer_name},</p>
               <p>Your booking has been confirmed! Here are your booking details:</p>
               <div class="booking-detail">
-                <strong>Event:</strong> ${event_title}
+                <strong>Event:</strong> ${event_name}
               </div>
               <div class="booking-detail">
-                <strong>Booking ID:</strong> ${booking_id}
+                <strong>Booking ID:</strong> ${bookingId}
               </div>
               <div class="booking-detail">
                 <strong>Seat:</strong> ${seat_number || "General"}
               </div>
               <div class="booking-detail">
-                <strong>Price:</strong> PKR ${price}
+                <strong>Price:</strong> LKR ${ticket_price}
               </div>
               <div class="booking-detail">
-                <strong>Event Date:</strong> ${new Date(event_date).toLocaleString()}
+                <strong>Booking Date:</strong> ${new Date(booking_date).toLocaleString()}
               </div>
               <p>Please arrive 15 minutes before the event. Your ticket has been sent to this email.</p>
               <p>Best regards,<br>EventHub Team</p>
@@ -151,7 +152,7 @@ export async function sendBookingConfirmedEmail(data) {
       </html>
     `;
 
-    await sendEmail(attendee_email, subject, htmlContent);
+    await sendEmail(user_email, subject, htmlContent);
   } catch (error) {
     console.error("Error sending booking confirmation email:", error.message);
   }
