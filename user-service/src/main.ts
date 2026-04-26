@@ -17,7 +17,7 @@ async function bootstrap() {
   // Enable CORS so the Next.js admin app can call this service
   const allowedOrigins = process.env.ADMIN_ORIGIN?.split(',').map((o) =>
     o.trim(),
-  ) || ['http://localhost:3000'];
+  ) || ['http://localhost:3000', 'https://ctse-micro-client-admin.vercel.app'];
 
   app.enableCors({
     origin: allowedOrigins,

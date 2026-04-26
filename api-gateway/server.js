@@ -11,7 +11,16 @@ console.log("EVENT_URL:", process.env.EVENT_URL);
 
 const app = express();
 app.use(helmet()); // Security headers
-app.use(cors());
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(",").map((o) => o.trim())
+  : ["http://localhost:3000", "https://ctse-micro-client-admin.vercel.app"];
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
 
 // Skip JSON parsing for multipart/form-data — let proxy handle it
 app.use((req, res, next) => {
