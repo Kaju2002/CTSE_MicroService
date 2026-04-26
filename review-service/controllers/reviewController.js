@@ -25,7 +25,7 @@ exports.createReview = async (req, res) => {
         .json({ error: "Access denied. No token provided." });
     }
 
-    // 2. Validate the token and get user details from User Service
+    // 2. Validate the token and get user details from User Service des
     const user = await validateUser(token);
 
     if (!user) {
