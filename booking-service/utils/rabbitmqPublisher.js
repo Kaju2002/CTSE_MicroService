@@ -32,7 +32,7 @@ async function publishBookingConfirmed(bookingData) {
     const message = {
       bookingId: bookingData._id.toString(),
       customer_name: bookingData.customer_name,
-      user_email: bookingData.email,
+      user_email: bookingData.email || bookingData.user_email,
       event_id: bookingData.event_id,
       event_name: bookingData.event_name,
       seat_number: bookingData.seat_number || null,
